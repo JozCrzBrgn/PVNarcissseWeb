@@ -10,6 +10,7 @@ class Configuracion:
         self.supabase = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
         self.BUCKET_GENERAL = st.secrets["BUCKET_GENERAL"]
         self.CREDENCIALES_FILE = st.secrets["CREDENCIALES_FILE"]
+        self.TAB_SECRETOS = st.secrets["TAB_SECRETOS"]
 config = Configuracion()
 
 

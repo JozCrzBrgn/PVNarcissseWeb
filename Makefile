@@ -36,7 +36,7 @@ tag:
 
 run:
 # Corremos la app
-	streamlit.exe run streamlit_app.py
+	streamlit run streamlit_app.py
 
 #? make cred NAMES="['Josefina', 'Bob', 'Charlie']" USRN="['alice123', 'bob456', 'charlie789']" PSS="['pass1', 'pass2', 'pass3']"
 cred:

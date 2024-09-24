@@ -31,7 +31,7 @@ elif authentication_status:
     with col2:
         authenticator.logout('Logout', 'main')
     
-    st.title("Pasteles de Celebración")
+    st.title("Pasteles de Celebración por Entregar")
 
     sucursal = st.radio("Selecciona un sucursal", ["Fábrica","Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán"])
 

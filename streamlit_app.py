@@ -20,16 +20,23 @@ metas_page = st.Page(
     icon="🎯"
 )
 
-pasteles_celebracion_page = st.Page(
-    page="views/pasteles_celebracion.py",
+pasteles_celebracion_por_entregar_page = st.Page(
+    page="views/pasteles_celebracion_por_entregar.py",
     title="Past. de Celeb. por Entregar",
     icon="🎂"
+)
+
+pasteles_celebracion_prod_page = st.Page(
+    page="views/pasteles_celebracion_prod.py",
+    title="Past. de Celeb. Producción",
+    icon="📆"
 )
 
 #? --- NAVEGATION SETUP [WITH SECTIONS] ---#
 pg = st.navigation(
     {
-        "Información de sucursales": [inventarios_page, venats_page, pasteles_celebracion_page],
+        "Información de sucursales": [inventarios_page, venats_page],
+        "Pasteles de Celebración": [pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page],
         "Métricas": [metas_page],
     }
 )

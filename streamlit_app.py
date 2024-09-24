@@ -3,8 +3,8 @@ import streamlit as st
 #? --- PAGE SETUP ---#
 inventarios_page = st.Page(
     page="views/inventario.py",
-    title="Inventario",
-    icon=":material/inventory:",
+    title="Inventarios",
+    icon="📋",
     default=True
 )
 

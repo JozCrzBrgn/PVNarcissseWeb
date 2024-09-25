@@ -90,35 +90,38 @@ elif authentication_status:
             fecha = st.date_input("Selecciona una fecha")
             df_choose = df_pc_sort[df_pc_sort['fecha_entrega']==fecha]
             st.table(df_choose)
-        # Seleccionar una fila basándose en la clave
-        clave_seleccionada = st.selectbox("Selecciona una clave", df_choose['clave'])
-        # Obtener el registro de la clave seleccionada
-        registro = df_pc[df_pc['clave'] == clave_seleccionada]
-        # Mostrar el registro seleccionado
-        col1, col2 = st.columns([1,2])
-        with col1:
-            # Imagen
-            st.image(img_url(clave_seleccionada, tabla_img_db[clave_seleccionada[:2]]))
-        with col2:
-            # Fecha y hora de entrega
-            fecha = str(registro['fecha_entrega'].iloc[0])
-            hora = str(registro['hora_entrega'].iloc[0])
-            st.text(f"Entregar: {fecha + " " + hora}")
-            # 
-            col31, col32 = st.columns([1,1])
-            with col31:
-                st.text(f"Número de Personas: {registro['personas'].iloc[0]}")
-            with col32:
-                st.text(f"Relleno: {registro['relleno'].iloc[0]}")
-            # 
-            col21, col22, col23 = st.columns([1,1,1])
-            with col21:
-                st.text(f"Base: {registro['base'].iloc[0]}")
-            with col22:
-                st.text(f"Pastel: {registro['pastel'].iloc[0]}")
-            with col23:
-                st.text(f"Cobertura: {registro['cobertura'].iloc[0]}")
-            # Descripcion
-            st.text(f"Descripción: \n{registro['descripcion'].iloc[0]}")
-            # Leyenda
-            st.text(f"Leyenda: {registro['leyenda'].iloc[0]}")
+        if df_choose.empty:
+            st.warning(f"Sin datos para la fecha {fecha}")
+        else:
+            # Seleccionar una fila basándose en la clave
+            clave_seleccionada = st.selectbox("Selecciona una clave", df_choose['clave'])
+            # Obtener el registro de la clave seleccionada
+            registro = df_pc[df_pc['clave'] == clave_seleccionada]
+            # Mostrar el registro seleccionado
+            col1, col2 = st.columns([1,2])
+            with col1:
+                # Imagen
+                st.image(img_url(clave_seleccionada, tabla_img_db[clave_seleccionada[:2]]))
+            with col2:
+                # Fecha y hora de entrega
+                fecha = str(registro['fecha_entrega'].iloc[0])
+                hora = str(registro['hora_entrega'].iloc[0])
+                st.text(f"Entregar: {fecha + " " + hora}")
+                # 
+                col31, col32 = st.columns([1,1])
+                with col31:
+                    st.text(f"Número de Personas: {registro['personas'].iloc[0]}")
+                with col32:
+                    st.text(f"Relleno: {registro['relleno'].iloc[0]}")
+                # 
+                col21, col22, col23 = st.columns([1,1,1])
+                with col21:
+                    st.text(f"Base: {registro['base'].iloc[0]}")
+                with col22:
+                    st.text(f"Pastel: {registro['pastel'].iloc[0]}")
+                with col23:
+                    st.text(f"Cobertura: {registro['cobertura'].iloc[0]}")
+                # Descripcion
+                st.text(f"Descripción: \n{registro['descripcion'].iloc[0]}")
+                # Leyenda
+                st.text(f"Leyenda: {registro['leyenda'].iloc[0]}")

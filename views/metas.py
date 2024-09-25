@@ -29,69 +29,72 @@ elif authentication_status is None:
 elif authentication_status:
     col1, col2 = st.columns([4,1])
     with col1:
-        st.success('Bienvenido {}'.format(name))
+        st.success('Bienvenid@ {}'.format(name))
     with col2:
         authenticator.logout('Logout', 'main')
     
     st.title("Metas")
 
-    #? Datos de la DB
-    metas_dic = metas_sucursales()
-    ventas_df_dic, ventas_sum_dic = ventas_sucursales()
+    if name=="Juan Tinajero" or name=="Sr. Silvia":
+        st.text("En construcción 🏗️🚧👷🏼‍♂️...")
+    else:
+        #? Datos de la DB
+        metas_dic = metas_sucursales()
+        ventas_df_dic, ventas_sum_dic = ventas_sucursales()
 
-    #? Renderizacion de widgets
+        #? Renderizacion de widgets
 
-    #* ###################
-    #* AGRICOLA ORIENTAL #
-    #* ###################
-    st.header("Agrícola Oriental")
-    # Marcador de métas
-    meta(metas_dic['Agri'], int(ventas_sum_dic['Agri']-metas_dic['Agri']))
-    # Ventas por día
-    grafico_barras(ventas_df_dic['Agri'])
-    # Meta a alcanzar
-    grafico_velocimetro(ventas_sum_dic['Agri'], metas_dic['Agri'])
+        #* ###################
+        #* AGRICOLA ORIENTAL #
+        #* ###################
+        st.header("Agrícola Oriental")
+        # Marcador de métas
+        meta(metas_dic['Agri'], int(ventas_sum_dic['Agri']-metas_dic['Agri']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Agri'])
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Agri'], metas_dic['Agri'])
 
-    #* ################
-    #* NEZAHUALCOYOTL #
-    #* ################
-    st.header("Nezahualcóyotl")
-    # Marcador de métas
-    meta(metas_dic['Neza'], int(ventas_sum_dic['Neza']-metas_dic['Neza']))
-    # Ventas por día
-    grafico_barras(ventas_df_dic['Neza'])
-    # Meta a alcanzar
-    grafico_velocimetro(ventas_sum_dic['Neza'], metas_dic['Neza'])
+        #* ################
+        #* NEZAHUALCOYOTL #
+        #* ################
+        st.header("Nezahualcóyotl")
+        # Marcador de métas
+        meta(metas_dic['Neza'], int(ventas_sum_dic['Neza']-metas_dic['Neza']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Neza'])
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Neza'], metas_dic['Neza'])
 
-    #* ############
-    #* ZAPOTITLAN #
-    #* ############
-    st.header("Zapotitlán")
-    # Marcador de métas
-    meta(metas_dic['Zapo'], int(ventas_sum_dic['Zapo']-metas_dic['Zapo']))
-    # Ventas por día
-    grafico_barras(ventas_df_dic['Zapo'])
-    # Meta a alcanzar
-    grafico_velocimetro(ventas_sum_dic['Zapo'], metas_dic['Zapo'])
+        #* ############
+        #* ZAPOTITLAN #
+        #* ############
+        st.header("Zapotitlán")
+        # Marcador de métas
+        meta(metas_dic['Zapo'], int(ventas_sum_dic['Zapo']-metas_dic['Zapo']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Zapo'])
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Zapo'], metas_dic['Zapo'])
 
-    #* ##########
-    #* OAXTEPEC #
-    #* ##########
-    st.header("Oaxtepec")
-    # Marcador de métas
-    meta(metas_dic['Oaxte'], int(ventas_sum_dic['Oaxte']-metas_dic['Oaxte']))
-    # Ventas por día
-    grafico_barras(ventas_df_dic['Oaxte'])
-    # Meta a alcanzar
-    grafico_velocimetro(ventas_sum_dic['Oaxte'], metas_dic['Oaxte'])
+        #* ##########
+        #* OAXTEPEC #
+        #* ##########
+        st.header("Oaxtepec")
+        # Marcador de métas
+        meta(metas_dic['Oaxte'], int(ventas_sum_dic['Oaxte']-metas_dic['Oaxte']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Oaxte'])
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Oaxte'], metas_dic['Oaxte'])
 
-    #* ###########
-    #* PANTITLAN #
-    #* ###########
-    st.header("Pantitlán")
-    # Marcador de métas
-    meta(metas_dic['Panti'], int(ventas_sum_dic['Panti']-metas_dic['Panti']))
-    # Ventas por día
-    grafico_barras(ventas_df_dic['Panti'])
-    # Meta a alcanzar
-    grafico_velocimetro(ventas_sum_dic['Panti'], metas_dic['Panti'])
+        #* ###########
+        #* PANTITLAN #
+        #* ###########
+        st.header("Pantitlán")
+        # Marcador de métas
+        meta(metas_dic['Panti'], int(ventas_sum_dic['Panti']-metas_dic['Panti']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Panti'])
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Panti'], metas_dic['Panti'])

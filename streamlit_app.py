@@ -41,5 +41,9 @@ pg = st.navigation(
     }
 )
 
+#? --- SHARE ON ALL PAGES ---#
+st.logo("assets/narcisse.png")
+st.sidebar.text("Made with ❤️ by Joz")
+
 #? --- RUN NAVEGATION ---#
 pg.run()

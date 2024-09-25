@@ -27,7 +27,7 @@ elif authentication_status is None:
 elif authentication_status:
     col1, col2 = st.columns([4,1])
     with col1:
-        st.success('Bienvenido {}'.format(name))
+        st.success('Bienvenid@ {}'.format(name))
     with col2:
         authenticator.logout('Logout', 'main')
     

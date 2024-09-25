@@ -1,6 +1,8 @@
 import streamlit as st
 
 #? --- PAGE SETUP ---#
+st.set_page_config(layout="wide")
+
 inventarios_page = st.Page(
     page="views/inventario.py",
     title="Inventarios",

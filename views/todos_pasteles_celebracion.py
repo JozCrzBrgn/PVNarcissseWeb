@@ -148,3 +148,24 @@ elif authentication_status:
                 st.text(f"Descripción: \n{registro['descripcion'].iloc[0]}")
                 # Leyenda
                 st.text(f"Leyenda: {registro['leyenda'].iloc[0]}")
+            if not ls_ab:
+                st.warning(f"No tienes ningún abono 💸💲💰 para la clave {clave_seleccionada}.")
+            else:
+                # Concatenar los dataframes
+                df_abonos_desglosado = pd.concat(ls_ab)
+                # Crear una columna con el efectivo total
+                df_abonos_desglosado['efectivo2'] = df_abonos_desglosado['efectivo'] - df_abonos_desglosado['cambio']
+                # Quitamos las columnas que no necesitamos
+                df_abonos = df_abonos_desglosado[['clave', 'sucursal', 'efectivo2', 'tarjeta', 'transferencia', 'cantidad_abonada']]
+                # Renombramos las columnas
+                df_abonos.columns = ['clave', 'sucursal', 'efectivo', 'tarjeta', 'transferencia', 'total_dia']
+                # Filtramos por clave
+                abonos_tbl = df_abonos[df_abonos['clave']==clave_seleccionada]
+                # Mostramos el total
+                col41, col42 = st.columns([4,1])
+                with col41:
+                    st.text(f"")
+                with col42:
+                    st.metric("Total abonado", f"$ {abonos_tbl['total_dia'].sum().round(0)} 💵")
+                # Mostramos la tabla
+                st.table(abonos_tbl)

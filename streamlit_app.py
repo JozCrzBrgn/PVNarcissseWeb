@@ -22,6 +22,12 @@ metas_page = st.Page(
     icon="🎯"
 )
 
+pasteles_celebracion_page = st.Page(
+    page="views/todos_pasteles_celebracion.py",
+    title="💲Pasteles de Celebración y Abonos",
+    icon="🍰"
+)
+
 pasteles_celebracion_por_entregar_page = st.Page(
     page="views/pasteles_celebracion_por_entregar.py",
     title="Past. de Celeb. por Entregar",
@@ -38,7 +44,7 @@ pasteles_celebracion_prod_page = st.Page(
 pg = st.navigation(
     {
         "Información de sucursales": [inventarios_page, venats_page],
-        "Pasteles de Celebración": [pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page],
+        "Pasteles de Celebración": [pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page],
         "Métricas": [metas_page],
     }
 )

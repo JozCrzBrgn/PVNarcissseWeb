@@ -159,9 +159,9 @@ elif authentication_status:
                     # Crear una columna con el efectivo total
                     df_abonos_desglosado['efectivo2'] = df_abonos_desglosado['efectivo'] - df_abonos_desglosado['cambio']
                     # Quitamos las columnas que no necesitamos
-                    df_abonos = df_abonos_desglosado[['clave', 'sucursal', 'efectivo2', 'tarjeta', 'transferencia', 'cantidad_abonada']]
+                    df_abonos = df_abonos_desglosado[['clave','sucursal','fecha_abono','hora_abono','efectivo2','tarjeta','transferencia','cantidad_abonada']]
                     # Renombramos las columnas
-                    df_abonos.columns = ['clave', 'sucursal', 'efectivo', 'tarjeta', 'transferencia', 'total_dia']
+                    df_abonos.columns = ['clave','sucursal','fecha','hora','efectivo','tarjeta','transferencia','total_dia']
                     # Filtramos por clave
                     abonos_tbl = df_abonos[df_abonos['clave']==clave_seleccionada]
                     # Mostramos el total

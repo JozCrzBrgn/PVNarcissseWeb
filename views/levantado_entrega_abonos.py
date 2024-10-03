@@ -76,6 +76,7 @@ elif authentication_status:
             df_pc['comision_empleado'] = (df_pc['descuento']*0.10).astype(int)
             # Nos quedamos con las columnas que necesitamos
             df_pc_sort = df_pc[['clave','cliente','fecha_pedido','fecha_entrega','hora_entrega','empleado','comision_empleado','descuento','flete','extras']]
+        
         # Checamos como quiere filtrar el cliente
         rad_btn = st.radio("Selecciona un filtro", ["Fecha de pedido", "Fecha de entrega"])
         if rad_btn == "Fecha de pedido":
@@ -95,7 +96,7 @@ elif authentication_status:
 
                 # Filtro por mes, inicializando en enero (mes 1)
                 mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
-
+                print(mes_seleccionado)
                 # Filtrar el DataFrame según el mes seleccionado
                 df_filtrado = df_pc_sort[df_pc_sort['mes'] == mes_seleccionado]
 
@@ -164,3 +165,25 @@ elif authentication_status:
             df_filtrado = df_filtrado[['clave','cliente','fecha_pedido','fecha_entrega','hora_entrega','empleado','comision_empleado','descuento','flete','extras']]
             df_filtrado.rename(columns={'descuento': 'costo_pastel'}, inplace=True)
             st.table(df_filtrado)
+
+        # Concatenar los dataframes
+        df_abonos_desglosado = pd.concat(ls_ab)
+        # Crear una columna con el efectivo total
+        df_abonos_desglosado['efectivo2'] = df_abonos_desglosado['efectivo'] - df_abonos_desglosado['cambio']
+        # Quitamos las columnas que no necesitamos
+        df_abonos = df_abonos_desglosado[['clave','sucursal','fecha_abono','hora_abono','efectivo2','tarjeta','transferencia','cantidad_abonada']]
+        # Renombramos las columnas
+        df_abonos.columns = ['clave','sucursal','fecha','hora','efectivo','tarjeta','transferencia','total_dia']
+        df_abonos['fecha'] = pd.to_datetime(df_abonos['fecha'])
+        # Filtramos por clave
+        abonos_tbl = df_abonos[df_abonos['fecha'].dt.month == mes_seleccionado]
+        abonos_tbl = abonos_tbl[(abonos_tbl['fecha'].dt.day >= dias_seleccionados[0]) & (abonos_tbl['fecha'].dt.day <= dias_seleccionados[1])]
+        # Mostramos el total
+        col41, col42 = st.columns([4,1])
+        with col41:
+            st.text(f"")
+        with col42:
+            st.metric("Total abonado", f"$ {abonos_tbl['total_dia'].sum().round(0)} 💵")
+        # Mostramos la tabla
+        st.table(abonos_tbl)
+        

@@ -31,7 +31,7 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        sucursal = st.radio("Selecciona un sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán"])
+        sucursal = st.radio("Selecciona un sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Todas"])
 
         tabla_inv_db = {
             "Agrícola Oriental":"db04_inventario_agri", 
@@ -47,17 +47,45 @@ elif authentication_status:
             "Oaxtepec":"db05_tickets_oaxt", 
             "Pantitlán":"db05_tickets_panti"
             }
-        #? ANALISIS DE DATOS
-        # Obtenemos los datos de la DB
-        data_inv = config.supabase.table(tabla_inv_db[sucursal]).select("*").eq("estatus", "VENDIDO").execute().data
-        # Creamos el Dataframe
-        data_inv = pd.DataFrame(data_inv)
-        # Quitamos las columnas que no necesitamos
-        df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
-        # Convertimos la columna de caducidad a datetime
-        df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
-        # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
-        df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
+        
+        if sucursal=="Todas":
+            dfs = []
+            for tab in tabla_inv_db.values():
+                # Obtener los datos de la tabla
+                data = config.supabase.table(tab).select("*").eq("estatus", "VENDIDO").execute().data
+                # Crear un dataframe
+                data_inv = pd.DataFrame(data)
+                # Verificamos si el dataframe esta vacio
+                if data_inv.empty:
+                    continue
+                else:
+                    # Quitamos los acentos de la columna sucursal
+                    data_inv['sucursal'] = data_inv['sucursal'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+                    # Agregar el dataframe a la lista
+                    dfs.append(data_inv)
+            if not dfs:
+                data_inv = pd.DataFrame()
+            else:
+                # Concatenar los dataframes
+                data_inv = pd.concat(dfs)
+                # Quitamos las columnas que no necesitamos
+                df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
+                # Convertimos la columna de caducidad a datetime
+                df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
+                # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
+                df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
+        else:
+            #? ANALISIS DE DATOS
+            # Obtenemos los datos de la DB
+            data_inv = config.supabase.table(tabla_inv_db[sucursal]).select("*").eq("estatus", "VENDIDO").execute().data
+            # Creamos el Dataframe
+            data_inv = pd.DataFrame(data_inv)
+            # Quitamos las columnas que no necesitamos
+            df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
+            # Convertimos la columna de caducidad a datetime
+            df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
+            # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
+            df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
 
         col1_1, col1_2  = st.columns(2)
         with col1_1:

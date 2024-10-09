@@ -47,6 +47,14 @@ elif authentication_status:
             "Oaxtepec":"db05_tickets_oaxt", 
             "Pantitlán":"db05_tickets_panti"
             }
+        tabla_abn_db = {
+            "Agrícola Oriental":"db03_abonos_celebracion_agri",
+            "Nezahualcóyotl":"db03_abonos_celebracion_neza",
+            "Zapotitlán": "db03_abonos_celebracion_zapo",
+            "Oaxtepec":"db03_abonos_celebracion_oaxt",
+            "Pantitlán": "db03_abonos_celebracion_panti"
+            }
+            
         
         if sucursal=="Todas":
             dfs = []
@@ -74,16 +82,44 @@ elif authentication_status:
                 df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
                 # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
                 df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
+            
+            dfs = []
+            for tab in tabla_abn_db.values():
+                # Obtener los datos de la tabla
+                data = config.supabase.table(tab).select("*").execute().data
+                # Crear un dataframe
+                df = pd.DataFrame(data)
+                # Verificamos si el dataframe esta vacio
+                if df.empty:
+                    continue
+                else:
+                    # Quitamos los acentos de la columna sucursal
+                    df['sucursal'] = df['sucursal'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+                    # Agregar el dataframe a la lista
+                    dfs.append(df)
+            if not dfs:
+                data_abonos = pd.DataFrame()
+            else:
+                # Concatenar los dataframes
+                data_abonos = pd.concat(dfs)
+                # Quitamos las columnas que no necesitamos
+                data_abonos = data_abonos[['clave', 'cantidad_abonada', 'fecha_abono','hora_abono']]
+                # Convertimos la columna de fecha a datetime
+                data_abonos['fecha_abono'] = pd.to_datetime(data_abonos['fecha_abono'])
         else:
             #? ANALISIS DE DATOS
             # Obtenemos los datos de la DB
             data_inv = config.supabase.table(tabla_inv_db[sucursal]).select("*").eq("estatus", "VENDIDO").execute().data
+            data_abonos = config.supabase.table(tabla_abn_db[sucursal]).select("*").execute().data
             # Creamos el Dataframe
             data_inv = pd.DataFrame(data_inv)
+            data_abonos = pd.DataFrame(data_abonos)
             # Quitamos las columnas que no necesitamos
             df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
-            # Convertimos la columna de caducidad a datetime
+            data_abonos = data_abonos[['clave', 'cantidad_abonada', 'fecha_abono','hora_abono']]
+            # Convertimos la columna de fecha a datetime
             df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
+            data_abonos['fecha_abono'] = pd.to_datetime(data_abonos['fecha_abono'])
             # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
             df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
 
@@ -93,6 +129,9 @@ elif authentication_status:
             # Extraer los meses de la columna de fechas
             df_inv['mes'] = df_inv['fecha_estatus'].dt.month
             df_inv['dia'] = df_inv['fecha_estatus'].dt.day
+
+            data_abonos['mes'] = data_abonos['fecha_abono'].dt.month
+            data_abonos['dia'] = data_abonos['fecha_abono'].dt.day
 
             # Definir los nombres de los meses
             meses = {
@@ -106,6 +145,7 @@ elif authentication_status:
 
             # Filtrar el DataFrame según el mes seleccionado
             df_filtrado = df_inv[df_inv['mes'] == mes_seleccionado]
+            df_filtrado_abono = data_abonos[data_abonos['mes'] == mes_seleccionado]
 
         with col1_2:
             #? FILTROS POR DÍAS
@@ -126,6 +166,7 @@ elif authentication_status:
                 )
                 # Filtrar el DataFrame según los días seleccionados
                 df_filtrado = df_filtrado[(df_filtrado['dia'] >= dias_seleccionados[0]) & (df_filtrado['dia'] <= dias_seleccionados[1])]
+                df_filtrado_abono = df_filtrado_abono[(df_filtrado_abono['dia'] >= dias_seleccionados[0]) & (df_filtrado_abono['dia'] <= dias_seleccionados[1])]
 
         if df_filtrado.empty==False:
             col1_1, col1_2, col2_2, col1_3  = st.columns([1,1,1,2])#[2,2,1])
@@ -159,7 +200,18 @@ elif authentication_status:
                     df_filtrado = df_filtrado  # Mostrar todo si no hay selección
             with col1_3:
                 ventas = round(df_filtrado['costo_neto_producto'].sum(), 2)
-                st.metric("VENDIDO", f"$ {ventas} MXN")
+                st.metric("LÍNEA", f"$ {ventas} MXN")
 
             # Mostrar tabla filtrada
             st.table(df_filtrado[['clave', 'producto', 'categoria', 'promocion', 'fecha_estatus', 'hora_estatus', 'costo_neto_producto']])
+            if df_filtrado_abono.empty:
+                st.warning(f"No hay abonos disponibles para {meses[mes_seleccionado]}.")
+            else:
+                col1, col2 = st.columns(2)
+                with col1:
+                    abonos = round(df_filtrado_abono['cantidad_abonada'].sum(), 2)
+                    st.metric("ABONOS", f"$ {abonos} MXN")
+                with col2:
+                    total = ventas + abonos
+                    st.metric("VENTA TOTAL", f"$ {total} MXN")
+                st.table(df_filtrado_abono[["clave", "cantidad_abonada", "fecha_abono", "hora_abono"]])

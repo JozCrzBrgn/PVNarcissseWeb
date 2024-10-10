@@ -63,7 +63,6 @@ elif authentication_status:
         ls_ab = []
         for tabs in ls_pc_ab:
             # Obtener los datos de la tabla
-            #!hoy = dt.now().strftime("%Y-%m-%d")
             data_pc = config.supabase.table(tabs[0]).select("*").execute().data
             data_ab = config.supabase.table(tabs[1]).select("*").execute().data
             # Crear un dataframe

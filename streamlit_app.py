@@ -52,11 +52,17 @@ pasteles_celebracion_prod_page = st.Page(
     icon="📆"
 )
 
+pasteles_celebracion_calendar = st.Page(
+    page="views/pasteles_celebracion_calendar.py",
+    title="Calendario Past. de Celeb.",
+    icon="📆"
+)
+
 #? --- NAVEGATION SETUP [WITH SECTIONS] ---#
 pg = st.navigation(
     {
         "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page],
-        "Pasteles de Celebración": [pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
+        "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
         "Métricas": [metas_page],
     }
 )

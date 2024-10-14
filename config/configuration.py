@@ -12,6 +12,7 @@ class Configuracion:
         self.CREDENCIALES_FILE = st.secrets["CREDENCIALES_FILE"]
         self.TAB_SECRETOS = st.secrets["TAB_SECRETOS"]
         self.BUCKET_PASTEL_CELEBRACION = st.secrets["BUCKET_PASTEL_CELEBRACION"]
+        self.COSTOS_INFLALANDIA_FILE = st.secrets["COSTOS_INFLALANDIA_FILE"]
 config = Configuracion()
 
 

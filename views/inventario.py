@@ -10,6 +10,7 @@ import streamlit_authenticator as stauth
 
 from config.configuration import config, read_json_from_supabase
 
+
 #* USER AUTHENTICATION
 credenciales = read_json_from_supabase(config.BUCKET_GENERAL, config.CREDENCIALES_FILE)
 authenticator = stauth.Authenticate(
@@ -21,9 +22,9 @@ authenticator = stauth.Authenticate(
 name, authentication_status, username = authenticator.login()
 
 if authentication_status is False:
-    st.error('Username/password is incorrect')
+    st.error('Nombre de usuario o contraseña incorrectos')
 elif authentication_status is None:
-    st.warning('Please enter your username ands password')
+    st.warning('Por favor, ingresa tu nombre de usuario y contraseña')
 elif authentication_status:
     col1, col2 = st.columns([4,1])
     with col1:

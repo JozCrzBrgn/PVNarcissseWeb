@@ -7,6 +7,7 @@ from config.configuration import config, read_json_from_supabase
 
 #* USER AUTHENTICATION
 credenciales = read_json_from_supabase(config.BUCKET_GENERAL, config.CREDENCIALES_FILE)
+
 authenticator = stauth.Authenticate(
     credenciales,
     st.secrets["COOKIE_NAME"],

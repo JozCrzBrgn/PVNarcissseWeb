@@ -58,11 +58,18 @@ pasteles_celebracion_calendar = st.Page(
     icon="📆"
 )
 
+crear_pedido_inflalandia = st.Page(
+    page="views/crear_pedido_inflalandia.py",
+    title="Crear pedido inflalandia",
+    icon="🐤"
+)
+
 #? --- NAVEGATION SETUP [WITH SECTIONS] ---#
 pg = st.navigation(
     {
         "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page],
         "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
+        "Inflalandia": [crear_pedido_inflalandia],
         "Métricas": [metas_page],
     }
 )

@@ -131,4 +131,5 @@ elif authentication_status:
                 config.supabase.table(tabs_pedidos[sucursal_infla]).insert(values).execute()
                 st.success("✅️ Pedido creado correctamente ✅️")
             except Exception as e:
+                st.error(f"⚠️Mandale foto a Josue!!! ⚠️")
                 st.error(f"Error al guardar datos: {e}")

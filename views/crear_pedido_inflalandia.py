@@ -1,7 +1,5 @@
 
-from io import BytesIO
 
-import pandas as pd
 from datetime import datetime as dt
 from datetime import timedelta as td 
 
@@ -20,7 +18,6 @@ indx_pedidos = {
     "Oceania":"OC",
     "Tlanepantla":"TL",
 }
-
 
 #* USER AUTHENTICATION
 credenciales = read_json_from_supabase(config.BUCKET_GENERAL, config.CREDENCIALES_FILE)
@@ -48,11 +45,12 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        num_pasteles_costo = read_json_from_supabase(config.BUCKET_GENERAL, config.COSTOS_INFLALANDIA_FILE)
+        pasteles_costo_json = read_json_from_supabase(config.BUCKET_GENERAL, config.COSTOS_INFLALANDIA_FILE)
+        num_pasteles_costo = pasteles_costo_json['pasteles']
 
         col1, col2, col3 = st.columns([1,2,1])
         with col1:
-            sucursal_infla = st.selectbox("Selecciona una ubicación", ["Coapa", "Oceania", "Tlanepantla"])
+            sucursal_infla = st.selectbox("Selecciona una ubicación", ["Tlanepantla", "Coapa", "Oceania"])
         with col2:
             st.header("")
         with col3:
@@ -100,36 +98,37 @@ elif authentication_status:
 
         costo_total = float(num_pasteles_costo[numPersonas_infla]) + extras_infla
         st.metric("COSTO TOTAL", f"$ {costo_total} MXN")
-        '''values = {
-                "email":"",
-                "celular":"",
-                "personas":"", #!
-                "lugar_entrega":"",
-                "empleado":"",
-                "flete":"",
-            }'''
-        
+
+        empleados_infla = pasteles_costo_json['empleados']
+        empleado = empleados_infla[sucursal_infla][0]
+        celular = empleados_infla[sucursal_infla][1]
+        lugar_entrega = empleados_infla[sucursal_infla][2]
+        personas_infla = pasteles_costo_json['personas']
         values = {
                 "clave":clave,
                 "cliente":cliente_infla,
+                "empleado":empleado,
+                "celular":celular,
                 "fecha_entrega": dt.strftime(fecha_entrega_infla, "%Y-%m-%d"),
                 "hora_entrega":str(hora_entrega_infla),
                 "descuento":costo_total,
+                "costo_total":costo_total,
                 "relleno":relleno_infla,
                 "descripcion":descripcion_infla,
                 "fecha_pedido":dt.strftime(fecha_pedido_infla, "%Y-%m-%d"),
                 "estatus":"DANDO DE ALTA",
+                "personas":int(personas_infla[numPersonas_infla]),
                 "sucursal":sucursal_infla,
                 "extras":extras_infla,
                 "leyenda":leyenda_infla,
+                "lugar_entrega":lugar_entrega,
                 "is_editable":1,
             }
         # Crear un botón
         if st.button("Crear Pedido"):
-            try:
-                # Simula guardar los datos en una base de datos
-                config.supabase.table(tabs_pedidos[sucursal_infla]).insert(values).execute()
-                st.success("✅️ Pedido creado correctamente ✅️")
-            except Exception as e:
-                st.error(f"⚠️Mandale foto a Josue!!! ⚠️")
-                st.error(f"Error al guardar datos: {e}")
+            st.write("¡El botón fue presionado!")
+            st.write(f"{values}\n\n")
+            # Simula guardar los datos en una base de datos
+            config.supabase.table(tabs_pedidos[sucursal_infla]).insert(values).execute()
+            st.write("ok")
+            st.success("✅️ Pedido creado correctamente ✅️")

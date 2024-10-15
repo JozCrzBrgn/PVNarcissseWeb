@@ -169,8 +169,8 @@ elif authentication_status:
                 df_filtrado_abono = df_filtrado_abono[(df_filtrado_abono['dia'] >= dias_seleccionados[0]) & (df_filtrado_abono['dia'] <= dias_seleccionados[1])]
 
         if df_filtrado.empty==False:
-            col1_1, col1_2, col2_2, col1_3  = st.columns([1,1,1,2])#[2,2,1])
-            with col1_1:
+            col1, col2, col3, col4, col5  = st.columns(5)#[2,2,1])
+            with col1:
                 #? FILTROS POR CATEGORIA
                 # Widget para seleccionar una categoría
                 categoria_seleccionada = st.multiselect('Filtrar por categoría:', df_filtrado['categoria'].unique())
@@ -178,7 +178,7 @@ elif authentication_status:
                     df_filtrado = df_filtrado[df_filtrado['categoria'].isin(categoria_seleccionada)]
                 else:
                     df_filtrado = df_filtrado  # Mostrar todo si no hay selección
-            with col1_2:
+            with col2:
                 #? FILTROS POR PRODUCTOS
                 if categoria_seleccionada:
                     # Solo mostrar productos que estén dentro de las categorías seleccionadas
@@ -190,7 +190,7 @@ elif authentication_status:
                 producto_seleccionado = st.multiselect('Filtrar por producto:', productos_disponibles)
                 if producto_seleccionado:
                     df_filtrado = df_filtrado[df_filtrado['producto'].isin(producto_seleccionado)]
-            with col2_2:
+            with col3:
                 #? FILTROS POR PRODUCTOS
                 # Widget para seleccionar una promocion
                 promocion_seleccionada = st.multiselect('Filtrar por promoción:', df_filtrado['promocion'].unique())
@@ -198,9 +198,14 @@ elif authentication_status:
                     df_filtrado = df_filtrado[df_filtrado['promocion'].isin(promocion_seleccionada)]
                 else:
                     df_filtrado = df_filtrado  # Mostrar todo si no hay selección
-            with col1_3:
+            with col4:
                 ventas = round(df_filtrado['costo_neto_producto'].sum(), 2)
                 st.metric("LÍNEA", f"$ {ventas} MXN")
+            with col5:
+                cant = round(df_filtrado['costo_neto_producto'].count(), 2)
+                st.metric("CANTIDAD", f"{cant}")
+
+
 
             # Mostrar tabla filtrada
             st.table(df_filtrado[['clave', 'producto', 'categoria', 'promocion', 'fecha_estatus', 'hora_estatus', 'costo_neto_producto']])

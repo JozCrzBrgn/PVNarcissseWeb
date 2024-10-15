@@ -126,9 +126,6 @@ elif authentication_status:
             }
         # Crear un botón
         if st.button("Crear Pedido"):
-            st.write("¡El botón fue presionado!")
-            st.write(f"{values}\n\n")
             # Simula guardar los datos en una base de datos
             config.supabase.table(tabs_pedidos[sucursal_infla]).insert(values).execute()
-            st.write("ok")
             st.success("✅️ Pedido creado correctamente ✅️")

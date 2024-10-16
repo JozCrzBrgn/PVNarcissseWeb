@@ -205,8 +205,6 @@ elif authentication_status:
                 cant = round(df_filtrado['costo_neto_producto'].count(), 2)
                 st.metric("CANTIDAD", f"{cant}")
 
-
-
             # Mostrar tabla filtrada
             st.table(df_filtrado[['clave', 'producto', 'categoria', 'promocion', 'fecha_estatus', 'hora_estatus', 'costo_neto_producto']])
             if df_filtrado_abono.empty:

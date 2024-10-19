@@ -74,9 +74,11 @@ elif authentication_status:
 
         #* Validamos que si tenga pedidos
         if lista_ids != []:
-            locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')
+            #locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')
             def formatear_fecha(fecha):
-                return fecha.strftime("%A %d, %B").upper()
+                fecha_new = fecha.strftime("%A %d, %B").upper()
+                fecha_sin_acentos = fecha_new.replace("Á","A").replace("É","E").replace("Í","I").replace("Ó","O").replace("Ú","U")
+                return fecha_sin_acentos
             
             pedidos_imprimir = st.multiselect("Selecciona los pedidos a imprimir", lista_ids)
 

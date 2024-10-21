@@ -39,6 +39,9 @@ elif authentication_status:
             ["db02_pedidos_celebracion_oaxt","db03_abonos_celebracion_oaxt"],
             ["db02_pedidos_celebracion_panti", "db03_abonos_celebracion_panti"],
             ["db02_pedidos_celebracion_fab","db03_abonos_celebracion_fab"],
+            ["db02_pedidos_celebracion_coapa","db03_abonos_celebracion_coapa"],
+            ["db02_pedidos_celebracion_oceania","db03_abonos_celebracion_oceania"],
+            ["db02_pedidos_celebracion_tlane","db03_abonos_celebracion_tlane"]
             ]
         tabla_img_db = {
             "AG":"agri", 
@@ -46,7 +49,10 @@ elif authentication_status:
             "ZA":"zapo", 
             "OA":"oaxt", 
             "PA":"panti",
-            "FA":"fabrica"
+            "FA":"fabrica",
+            "CO":"coapa",
+            "OC":"oceania",
+            "TL":"tlane"
             }
         
         def img_url(clave, carpeta):

@@ -80,10 +80,13 @@ elif authentication_status:
             with col3:
                 data_abonos = config.supabase.table(tabs_abonos[sucursal_infla]).select("*").execute().data
                 df_abonos_celeb = pd.DataFrame(data_abonos)
-                df_abono = df_abonos_celeb[df_abonos_celeb['clave']==ids_celeb]
-                sum_abono_fl = float(df_abono['cantidad_abonada'].sum())
-                deuda_fl = cto_tot_fl - sum_abono_fl
-                deuda_actual = st.number_input("Deuda actual", value=deuda_fl, step=100.0, min_value=0.0, disabled=True)
+                if df_abonos_celeb.empty:
+                    deuda_actual = st.number_input("Deuda actual", value=0.0, step=100.0, min_value=0.0, disabled=True)
+                else:
+                    df_abono = df_abonos_celeb[df_abonos_celeb['clave']==ids_celeb]
+                    sum_abono_fl = float(df_abono['cantidad_abonada'].sum())
+                    deuda_fl = cto_tot_fl - sum_abono_fl
+                    deuda_actual = st.number_input("Deuda actual", value=deuda_fl, step=100.0, min_value=0.0, disabled=True)
             #* Mosrtamos los campos a ingresar
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -113,4 +116,5 @@ elif authentication_status:
                         st.success("✅️ Pedido abonado correctamente ✅️")
                     else:
                         st.warning("⚠️ No puedes abonar más de lo que debes ⚠️")
-            st.table(df_abono[['clave', 'fecha_abono', 'hora_abono', 'efectivo', 'tarjeta', 'transferencia']])
+            if df_abonos_celeb.empty == False:
+                st.table(df_abono[['clave', 'fecha_abono', 'hora_abono', 'efectivo', 'tarjeta', 'transferencia']])

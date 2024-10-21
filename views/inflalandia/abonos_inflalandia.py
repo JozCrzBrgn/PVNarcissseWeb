@@ -45,7 +45,7 @@ elif authentication_status:
     with col2:
         authenticator.logout('Logout', 'main')
     
-    st.title("Abonos inflalandia 🐤🐤🐤")
+    st.title("Abonos inflalandia 🦆🦆🦆")
 
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
@@ -116,5 +116,7 @@ elif authentication_status:
                         st.success("✅️ Pedido abonado correctamente ✅️")
                     else:
                         st.warning("⚠️ No puedes abonar más de lo que debes ⚠️")
-            if df_abonos_celeb.empty == False:
+            if df_abonos_celeb.empty:
+                st.info("Aun no hay abonos para este pedido")
+            else:
                 st.table(df_abono[['clave', 'fecha_abono', 'hora_abono', 'efectivo', 'tarjeta', 'transferencia']])

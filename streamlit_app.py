@@ -61,22 +61,22 @@ pasteles_celebracion_calendar = st.Page(
 crear_pedido_inflalandia = st.Page(
     page="views/inflalandia/crear_pedido_inflalandia.py",
     title="🆕Crear pedido inflalandia",
-    icon="🐤"
+    icon="🦆"
 )
 editar_pedido_inflalandia = st.Page(
     page="views/inflalandia/editar_pedido_inflalandia.py",
     title="📝Editar pedido inflalandia",
-    icon="🐤"
+    icon="🦆"
 )
 abonos_inflalandia = st.Page(
     page="views/inflalandia/abonos_inflalandia.py",
     title="💵Abonos inflalandia",
-    icon="🐤"
+    icon="🦆"
 )
 pdfs_inflalandia = st.Page(
     page="views/inflalandia/pdfs_inflalandia.py",
     title="⬇️PDF inflalandia",
-    icon="🐤"
+    icon="🦆"
 )
 
 #? --- NAVEGATION SETUP [WITH SECTIONS] ---#

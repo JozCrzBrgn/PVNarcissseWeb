@@ -55,6 +55,7 @@ elif authentication_status:
             past_date_str = past_date.strftime("%Y-%m-%d")           
             hoja_pedidos = config.supabase.table(tabs_pedidos[sucursal_infla]).select("*").gte("fecha_pedido", past_date_str).execute().data
             lista_ids = list(set([item['clave'] for item in hoja_pedidos]))
+            lista_ids.sort()
             if lista_ids == []:
                 # Si no hay ID´s, no hay nada que editar
                 st.warning('Esta sucursal no tiene ningún pedido que editar!')
@@ -67,7 +68,7 @@ elif authentication_status:
             df = pd.DataFrame(hoja_pedidos)
             df_celeb = df[df['clave']==ids_celeb]
 
-            edit_prop = st.radio("¿Qué quieres editar?", ["Nombre del cliente", "Leyenda", "Fecha del pedido", "Fecha de entrega", "Hora de entrega", "Relleno", "Número de personas", "Extras", "Descripción/comentarios del pastel"])
+            edit_prop = st.radio("¿Qué quieres editar?", ["Nombre del cliente", "Leyenda", "Fecha del pedido", "Fecha de entrega", "Hora de entrega", "Relleno", "Número de personas", "Extras", "Descripción/comentarios del pastel", "Entregado"])
 
             if edit_prop == "Nombre del cliente":
                 cliente_infla  = st.text_input("Nombre del cliente", value=df_celeb['cliente'].values[0])
@@ -149,3 +150,17 @@ elif authentication_status:
                 if st.button("Editar: Descripción/comentarios del pastel"):
                     config.supabase.table(tabs_pedidos[sucursal_infla]).update({"descripcion": descripcion_infla}).eq("clave", ids_celeb).execute()
                     st.success("✅️ Pedido editado correctamente ✅️")
+            if edit_prop == "Entregado":
+                # Crear un botón
+                if st.button("Editar: El pedido cambiará a entregado"):
+                    config.supabase.table(tabs_pedidos[sucursal_infla]).update({"estatus": "VENDIDO"}).eq("clave", ids_celeb).execute()
+                    st.success("✅️ Pedido editado correctamente ✅️")
+
+        # Obtenemos la tabla con el pedido selecionado
+        hoja_pedidos = config.supabase.table(tabs_pedidos[sucursal_infla]).select("*").execute().data
+        df_pedidos_celeb = pd.DataFrame(hoja_pedidos)
+        if df_pedidos_celeb.empty:
+            st.error('No hay pedidos aun', icon="🚨")
+        else:
+            df_pedido = df_pedidos_celeb[df_pedidos_celeb['clave']==ids_celeb]
+            st.table(df_pedido[["cliente", "leyenda", "fecha_pedido", "fecha_entrega", "hora_entrega", "relleno", "personas", "extras", "descripcion"]])

@@ -1,7 +1,6 @@
 
 
 from fpdf import FPDF
-import os
 from datetime import datetime as dt
 
 DIRECCION = "Mi direccion"
@@ -62,25 +61,29 @@ def CrearPDF(df, nombre_sucursal, image_sucursal, dir_sucursal):
     pdf.ln(5)
 
     pdf.set_fill_color(217, 217, 217)
-    pdf.set_font('helvetica', 'B', 10)
+    pdf.set_font('helvetica', 'B', 8)
     altura = 10
-    pdf.cell(w=25, h=altura, txt="CLAVE", border=1, align='C', fill=1)
-    pdf.cell(w=55, h=altura, txt="DÍA", border=1, align='C', fill=1)
-    pdf.cell(w=65, h=altura, txt="CUMPLEAÑEROX", border=1, align='C', fill=1)
-    pdf.cell(w=20, h=altura, txt="HORARIO", border=1, align='C', fill=1)
-    pdf.multi_cell(w=25, h=altura, txt="CANT. DE PX", border=1, align='C', fill=1)
+    pdf.cell(w=22, h=altura, txt="CLAVE", border=1, align='C', fill=1)
+    pdf.cell(w=45, h=altura, txt="DÍA", border=1, align='C', fill=1)
+    pdf.cell(w=12, h=altura, txt="HORA", border=1, align='C', fill=1)
+    pdf.cell(w=30, h=altura, txt="CUMPLEAÑEROX", border=1, align='C', fill=1)
+    pdf.cell(w=12, h=altura, txt="PX", border=1, align='C', fill=1)
+    pdf.cell(w=55, h=altura, txt="RELLENO", border=1, align='C', fill=1)
+    pdf.multi_cell(w=15, h=altura, txt="COSTO", border=1, align='C', fill=1)
     pdf.set_text_color(0, 0, 0)
     pdf.ln(2)
 
     for row in df.values:
       pdf.set_fill_color(255, 255, 255)
-      pdf.set_font('helvetica', 'B', 10)
+      pdf.set_font('helvetica', 'B', 8)
       altura = 10
-      pdf.cell(w=25, h=altura, txt=row[0], border=1, align='C', fill=1)
-      pdf.cell(w=55, h=altura, txt=row[3], border=1, align='C', fill=1)
-      pdf.cell(w=65, h=altura, txt=row[1], border=1, align='C', fill=1)
-      pdf.cell(w=20, h=altura, txt=row[4][:-3], border=1, align='C', fill=1)
-      pdf.multi_cell(w=25, h=altura, txt=str(row[2]) + " PX", border=1, align='C', fill=1)
+      pdf.cell(w=22, h=altura, txt=row[0], border=1, align='C', fill=1) # CLAVE
+      pdf.cell(w=45, h=altura, txt=row[3], border=1, align='C', fill=1) # DÍA
+      pdf.cell(w=12, h=altura, txt=row[4][:-3], border=1, align='C', fill=1) # HORA
+      pdf.cell(w=30, h=altura, txt=row[1], border=1, align='C', fill=1) # CUMPLEAÑEROX
+      pdf.cell(w=12, h=altura, txt=str(row[2]) + " PX", border=1, align='C', fill=1) # PX
+      pdf.cell(w=55, h=altura, txt=row[5].upper(), border=1, align='C', fill=1) # RELLENO
+      pdf.multi_cell(w=15, h=altura, txt="$"+str(row[6]), border=1, align='C', fill=1) # COSTO
       pdf.set_text_color(0, 0, 0)
     
     pdf.add_page()
@@ -97,7 +100,8 @@ def CrearPDF(df, nombre_sucursal, image_sucursal, dir_sucursal):
     clausula_2 = 'Es indispensable que al recoger su pedido de sucursal o entrega de flete presente la orden de compra impresa y/o digital (PDF), sin excepción alguna.'
     clausula_3 = 'Los pasteles de entrega a domicilio deberán liquidarse 72hrs. Antes de la entrega.'
     clausula_4 = 'Una vez firmada esta orden de compra no se podrá realizar ningún tipo de modificación (fecha, flete, diseño o decoración, cubierta y/o número de personas) sin excepción alguna.'
-    clausula_5 = 'En pedidos con flete, por cuestiones de tráfico, la hora de entrega puede variar de la hora señalada en la nota (1 horas antes ó 1 horas después).'
+    clausula_5 = 'En caso de pedidos con flete, la hora de entrega podría verse sujeta a variaciones debido a factores de tráfico y otras circunstancias imprevistas. Dichas variaciones pueden \
+        oscilar entre 1 a 2 horas antes o después de la hora originalmente programada en la nota.'
     clausula_6 = 'Los pedidos con flete se entregan a pie del lugar asignado, debido a que solo lo lleva el operador, notificar cuando la entrega sea en algún piso en específico.'
     clausula_7 = 'Es indispensable que, al momento de recibir su pedido, solicite al operador el formato de recepción del pedido, el cual deberá llenar y firmar de conformidad.'
     clausula_8 = 'Una vez entregado el producto y firmado de conformidad el formato de entrega, no tendrán efecto las reclamaciones posteriores, principalmente en apariencia visual.'
@@ -110,9 +114,13 @@ def CrearPDF(df, nombre_sucursal, image_sucursal, dir_sucursal):
     clausula_13 = 'Para cualquier queja es indispensable presentarse en la sucursal con su ticket de compra. Llevar el 80% del producto, en un plazo no mayor a 24hrs.'
     clausula_14 = 'Estimado cliente, hacemos de su conocimiento que, en caso de desear cambiar la cubierta Fondant por cubierta Ganash y/o crema, Pastelería Narcisse \
         no se hace responsable de las diferencias económicas y/o de presentación que el cambio pueda ocasionar (se requiere firma).'
+    clausula_15 = 'El diseño solicitado se reproducirá lo más fielmente posible. Si el cliente pide que un diseño en fondant se realice con crema, el resultado puede \
+        diferir significativamente y será bajo su propio riesgo.'
+    clausula_16 = 'La entrega del pastel se realizará exclusivamente en planta baja.'
 
     list_clausulas = [
-        clausula_1, clausula_2, clausula_3, clausula_4, clausula_5, clausula_6, clausula_7, clausula_8, clausula_9, clausula_10, clausula_11, clausula_12, clausula_13, clausula_14
+        clausula_1, clausula_2, clausula_3, clausula_4, clausula_5, clausula_6, clausula_7, clausula_8, clausula_9, 
+        clausula_10, clausula_11, clausula_12, clausula_13, clausula_14, clausula_15, clausula_16
         ]
     for i, clausula in enumerate(list_clausulas):
         pdf.set_font('helvetica', 'B', 8)

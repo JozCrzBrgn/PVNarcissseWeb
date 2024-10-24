@@ -103,6 +103,7 @@ elif authentication_status:
                 os.remove(file)
             
         st.divider()
+        st.divider()
         # Obtenemos la tabla con todos los pedidos
         df_pedidos_celeb = pd.DataFrame(hoja_pedidos)
         if df_pedidos_celeb.empty:

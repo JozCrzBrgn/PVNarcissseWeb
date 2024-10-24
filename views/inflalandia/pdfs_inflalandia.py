@@ -68,6 +68,7 @@ elif authentication_status:
         with col3:          
             hoja_pedidos = config.supabase.table(tabs_pedidos[sucursal_infla]).select("*").execute().data
             lista_ids = list(set([item['clave'] for item in hoja_pedidos]))
+            lista_ids.sort()
             if lista_ids == []:
                 # Si no hay ID´s, no hay nada que editar
                 st.warning('Esta sucursal no tiene ningún pedido que abonar!')
@@ -100,3 +101,11 @@ elif authentication_status:
                         mime="application/pdf"
                     )
                 os.remove(file)
+            
+        st.divider()
+        # Obtenemos la tabla con todos los pedidos
+        df_pedidos_celeb = pd.DataFrame(hoja_pedidos)
+        if df_pedidos_celeb.empty:
+            st.error('No hay pedidos aun', icon="🚨")
+        else:
+            st.table(df_pedidos_celeb[["clave", "cliente", "leyenda", "fecha_pedido", "fecha_entrega", "hora_entrega", "relleno", "personas", "extras", "descripcion"]])

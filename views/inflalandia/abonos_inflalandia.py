@@ -58,6 +58,7 @@ elif authentication_status:
         with col3:          
             hoja_pedidos = config.supabase.table(tabs_pedidos[sucursal_infla]).select("*").execute().data
             lista_ids = list(set([item['clave'] for item in hoja_pedidos]))
+            lista_ids.sort()
             if lista_ids == []:
                 # Si no hay ID´s, no hay nada que editar
                 st.warning('Esta sucursal no tiene ningún pedido que abonar!')

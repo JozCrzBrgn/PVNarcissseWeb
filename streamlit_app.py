@@ -63,6 +63,11 @@ crear_pedido_inflalandia = st.Page(
     title="🆕Crear pedido inflalandia",
     icon="🦆"
 )
+crear_pedido_inflalandia_caro = st.Page(
+    page="views/inflalandia/crear_pedido_inflalandia_caro.py",
+    title="🆕Crear pedido inflalandia Nuevos",
+    icon="🦆"
+)
 editar_pedido_inflalandia = st.Page(
     page="views/inflalandia/editar_pedido_inflalandia.py",
     title="📝Editar pedido inflalandia",
@@ -84,7 +89,7 @@ pg = st.navigation(
     {
         "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page],
         "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
-        "Inflalandia": [crear_pedido_inflalandia, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
+        "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
         "Métricas": [metas_page],
     }
 )

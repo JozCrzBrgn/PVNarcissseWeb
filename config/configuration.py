@@ -13,6 +13,7 @@ class Configuracion:
         self.TAB_SECRETOS = st.secrets["TAB_SECRETOS"]
         self.BUCKET_PASTEL_CELEBRACION = st.secrets["BUCKET_PASTEL_CELEBRACION"]
         self.COSTOS_INFLALANDIA_FILE = st.secrets["COSTOS_INFLALANDIA_FILE"]
+        self.COSTOS_INFLALANDIA_FILE_CARO = st.secrets["COSTOS_INFLALANDIA_FILE_CARO"]
 config = Configuracion()
 
 

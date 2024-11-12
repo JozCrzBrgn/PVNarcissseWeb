@@ -22,6 +22,12 @@ ventas_filtros_page = st.Page(
     icon="🎛️"
 )
 
+compras_sucursales_page = st.Page(
+    page="views/compras_sucursales.py",
+    title="Compras sucursales",
+    icon="🎛️"
+)
+
 metas_page = st.Page(
     page="views/metas.py",
     title="Metas",
@@ -87,7 +93,7 @@ pdfs_inflalandia = st.Page(
 #? --- NAVEGATION SETUP [WITH SECTIONS] ---#
 pg = st.navigation(
     {
-        "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page],
+        "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page, compras_sucursales_page],
         "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
         "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
         "Métricas": [metas_page],

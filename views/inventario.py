@@ -37,7 +37,7 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        sucursal = st.radio("Selecciona un sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán"])
+        sucursal = st.segmented_control("Selecciona una sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán"], default="Agrícola Oriental")
         tabla_inv_db = {
             "Agrícola Oriental":"db04_inventario_agri", 
             "Nezahualcóyotl":"db04_inventario_neza", 
@@ -106,12 +106,19 @@ elif authentication_status:
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
+        #? CANTIDAD DE ESTADOS
+        optimo = df_filtrado[df_filtrado['estatus']=='🟢'].shape[0]
+        caducado = df_filtrado[df_filtrado['estatus']=='⛔'].shape[0]
+        caduca_hoy = df_filtrado[df_filtrado['estatus']=='🔴'].shape[0]
+        caduca_un_dia = df_filtrado[df_filtrado['estatus']=='🟠'].shape[0]
+        caduca_dos_dias = df_filtrado[df_filtrado['estatus']=='🟡'].shape[0]
+
         #? MARCADORES DE ESTATUS
         col1, col2, col3, col4, col5 = st.columns(5)
-        col1.metric("ÓPTIMO", f"🟢")
-        col2.metric("CADUCADO", f"⛔")
-        col3.metric("CADUCA HOY", f"🔴")
-        col4.metric("CADUCA EN UN DÍA", f"🟠")
-        col5.metric("CADUCA EN DOS DÍAS", f"🟡")
+        col1.metric("ÓPTIMO", f"{optimo} 🟢")
+        col2.metric("CADUCADO", f"{caducado} ⛔")
+        col3.metric("CADUCA HOY", f"{caduca_hoy} 🔴")
+        col4.metric("CADUCA EN UN DÍA", f"{caduca_un_dia} 🟠")
+        col5.metric("CADUCA EN DOS DÍAS", f"{caduca_dos_dias} 🟡")
 
         st.table(df_filtrado)

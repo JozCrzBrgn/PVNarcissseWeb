@@ -27,7 +27,7 @@ elif authentication_status:
     with col2:
         authenticator.logout('Logout', 'main')
     
-    st.title("Filtros en Ventas")
+    st.title("Compras en Sucursales")
 
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")

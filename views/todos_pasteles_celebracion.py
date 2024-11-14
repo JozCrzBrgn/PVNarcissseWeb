@@ -41,7 +41,10 @@ elif authentication_status:
             ["db02_pedidos_celebracion_fab","db03_abonos_celebracion_fab"],
             ["db02_pedidos_celebracion_coapa","db03_abonos_celebracion_coapa"],
             ["db02_pedidos_celebracion_oceania","db03_abonos_celebracion_oceania"],
-            ["db02_pedidos_celebracion_tlane","db03_abonos_celebracion_tlane"]
+            ["db02_pedidos_celebracion_tlane","db03_abonos_celebracion_tlane"],
+            ["db02_pedidos_celebracion_tona","db03_abonos_celebracion_tona"],
+            ["db02_pedidos_celebracion_tiza","db03_abonos_celebracion_tiza"],
+            ["db02_pedidos_celebracion_chim","db03_abonos_celebracion_chim"],
             ]
         tabla_img_db = {
             "AG":"agri", 
@@ -52,7 +55,10 @@ elif authentication_status:
             "FA":"fabrica",
             "CO":"coapa",
             "OC":"oceania",
-            "TL":"tlane"
+            "TL":"tlane",
+            "TO":"tona",
+            "TI":"tiza",
+            "CH":"chim",
             }
         
         def img_url(clave, carpeta):

@@ -32,7 +32,7 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        sucursal = st.segmented_control("Selecciona una sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán"], default="Agrícola Oriental")
+        sucursal = st.segmented_control("Selecciona una sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", "Chimalhuacán"], default="Agrícola Oriental")
         fecha = st.date_input("Selecciona una fecha")
 
         tabla_inv_db = {
@@ -40,14 +40,20 @@ elif authentication_status:
             "Nezahualcóyotl":"db04_inventario_neza", 
             "Zapotitlán":"db04_inventario_zapo", 
             "Oaxtepec":"db04_inventario_oaxt", 
-            "Pantitlán":"db04_inventario_panti"
+            "Pantitlán":"db04_inventario_panti",
+            "Tonanitla":"db04_inventario_tona",
+            "Tizayuca":"db04_inventario_tiza",
+            "Chimalhuacán":"db04_inventario_chim",
             }
         tabla_tks_db = {
             "Agrícola Oriental":"db05_tickets_agri", 
             "Nezahualcóyotl":"db05_tickets_neza", 
             "Zapotitlán":"db05_tickets_zapo", 
             "Oaxtepec":"db05_tickets_oaxt", 
-            "Pantitlán":"db05_tickets_panti"
+            "Pantitlán":"db05_tickets_panti",
+            "Tonanitla":"db05_tickets_tona",
+            "Tizayuca":"db05_tickets_tiza",
+            "Chimalhuacán":"db05_tickets_chim",
             }
         #? ANALISIS DE DATOS
         # Obtenemos los datos de la DB

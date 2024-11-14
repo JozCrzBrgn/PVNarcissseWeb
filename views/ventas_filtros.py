@@ -31,28 +31,37 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        sucursal = st.segmented_control("Selecciona una sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Todas"], default="Agrícola Oriental")
+        sucursal = st.segmented_control("Selecciona una sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", "Chimalhuacán", "Todas"], default="Agrícola Oriental")
 
         tabla_inv_db = {
             "Agrícola Oriental":"db04_inventario_agri", 
             "Nezahualcóyotl":"db04_inventario_neza", 
             "Zapotitlán":"db04_inventario_zapo", 
             "Oaxtepec":"db04_inventario_oaxt", 
-            "Pantitlán":"db04_inventario_panti"
+            "Pantitlán":"db04_inventario_panti",
+            "Tonanitla":"db04_inventario_tona",
+            "Tizayuca":"db04_inventario_tiza",
+            "Chimalhuacán":"db04_inventario_chim",
             }
         tabla_tks_db = {
             "Agrícola Oriental":"db05_tickets_agri", 
             "Nezahualcóyotl":"db05_tickets_neza", 
             "Zapotitlán":"db05_tickets_zapo", 
             "Oaxtepec":"db05_tickets_oaxt", 
-            "Pantitlán":"db05_tickets_panti"
+            "Pantitlán":"db05_tickets_panti",
+            "Tonanitla":"db05_tickets_tona",
+            "Tizayuca":"db05_tickets_tiza",
+            "Chimalhuacán":"db05_tickets_chim",
             }
         tabla_abn_db = {
             "Agrícola Oriental":"db03_abonos_celebracion_agri",
             "Nezahualcóyotl":"db03_abonos_celebracion_neza",
             "Zapotitlán": "db03_abonos_celebracion_zapo",
             "Oaxtepec":"db03_abonos_celebracion_oaxt",
-            "Pantitlán": "db03_abonos_celebracion_panti"
+            "Pantitlán": "db03_abonos_celebracion_panti",
+            "Tonanitla":"db03_abonos_celebracion_tona",
+            "Tizayuca":"db03_abonos_celebracion_tiza",
+            "Chimalhuacán":"db03_abonos_celebracion_chim",
             }
             
         

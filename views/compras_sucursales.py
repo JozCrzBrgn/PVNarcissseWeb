@@ -32,7 +32,11 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        sucursal = st.segmented_control("Selecciona un sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", "Chimalhuacán"])
+        sucursal = st.segmented_control(
+            "Selecciona un sucursal", 
+            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", 
+             "Chimalhuacán", "Chicoloapan"]
+            )
         
         
         tabla_inv_db = {
@@ -44,6 +48,7 @@ elif authentication_status:
             "Tonanitla":"db04_inventario_tona",
             "Tizayuca":"db04_inventario_tiza",
             "Chimalhuacán":"db04_inventario_chim",
+            "Chicoloapan":"db04_inventario_chic",
             }
 
         if sucursal!=None:

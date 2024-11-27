@@ -43,6 +43,7 @@ elif authentication_status:
         "db02_pedidos_celebracion_tona",
         "db02_pedidos_celebracion_tiza",
         "db02_pedidos_celebracion_chim",
+        "db02_pedidos_celebracion_chic",
         ]
     tabla_img_db = {
         "AG":"agri", 
@@ -57,6 +58,7 @@ elif authentication_status:
         "TO":"tona",
         "TI":"tiza",
         "CH":"chim",
+        "CH":"chic",
         }
     def img_url(clave, carpeta):
         data_imgs = config.supabase.storage.from_(config.BUCKET_PASTEL_CELEBRACION).list(carpeta)

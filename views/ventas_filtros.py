@@ -31,7 +31,12 @@ elif authentication_status:
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
-        sucursal = st.segmented_control("Selecciona una sucursal", ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", "Chimalhuacán", "Todas"], default="Agrícola Oriental")
+        sucursal = st.segmented_control(
+            "Selecciona una sucursal", 
+            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", 
+             "Chimalhuacán", "Chicoloapan", "Todas"], 
+            default="Agrícola Oriental"
+            )
 
         tabla_inv_db = {
             "Agrícola Oriental":"db04_inventario_agri", 
@@ -42,6 +47,7 @@ elif authentication_status:
             "Tonanitla":"db04_inventario_tona",
             "Tizayuca":"db04_inventario_tiza",
             "Chimalhuacán":"db04_inventario_chim",
+            "Chicoloapan":"db04_inventario_chic",
             }
         tabla_tks_db = {
             "Agrícola Oriental":"db05_tickets_agri", 
@@ -52,6 +58,7 @@ elif authentication_status:
             "Tonanitla":"db05_tickets_tona",
             "Tizayuca":"db05_tickets_tiza",
             "Chimalhuacán":"db05_tickets_chim",
+            "Chicoloapan":"db05_tickets_chic",
             }
         tabla_abn_db = {
             "Agrícola Oriental":"db03_abonos_celebracion_agri",
@@ -62,6 +69,7 @@ elif authentication_status:
             "Tonanitla":"db03_abonos_celebracion_tona",
             "Tizayuca":"db03_abonos_celebracion_tiza",
             "Chimalhuacán":"db03_abonos_celebracion_chim",
+            "Chicoloapan":"db03_abonos_celebracion_chic",
             }
             
         

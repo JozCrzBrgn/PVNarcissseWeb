@@ -90,12 +90,19 @@ pdfs_inflalandia = st.Page(
     icon="🦆"
 )
 
+agregar_producto = st.Page(
+    page="views/alta_productos/agregar_producto.py",
+    title="Agregar producto",
+    icon="🎂"
+)
+
 #? --- NAVEGATION SETUP [WITH SECTIONS] ---#
 pg = st.navigation(
     {
         "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page, compras_sucursales_page],
         "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
         "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
+        "Alta de Productos": [agregar_producto],
         "Métricas": [metas_page],
     }
 )

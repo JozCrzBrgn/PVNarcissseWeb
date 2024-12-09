@@ -99,7 +99,6 @@ elif authentication_status:
 
                 # Filtro por mes, inicializando en enero (mes 1)
                 mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
-                print(mes_seleccionado)
                 # Filtrar el DataFrame según el mes seleccionado
                 df_filtrado = df_pc_sort[df_pc_sort['mes'] == mes_seleccionado]
 

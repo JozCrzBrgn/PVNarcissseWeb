@@ -90,7 +90,6 @@ elif authentication_status:
                 df_pedidos_seleccionados['fecha_entrega'] = pd.to_datetime(df_pedidos_seleccionados['fecha_entrega'])
                 df_pedidos_seleccionados['fecha_formateda'] = df_pedidos_seleccionados['fecha_entrega'].apply(formatear_fecha)
                 df_pdf = df_pedidos_seleccionados[['clave', 'cliente', 'personas', 'fecha_formateda', 'hora_entrega', 'relleno', 'costo_total']]
-                print(df_pdf)
                 file = CrearPDF(df_pdf, sucursal_infla, imgs_pedidos[sucursal_infla], dir_pedidos[sucursal_infla])
                 # Proporcionar un botón para descargar el PDF
                 with open(file, "rb") as f:

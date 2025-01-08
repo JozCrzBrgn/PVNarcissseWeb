@@ -71,15 +71,14 @@ elif authentication_status:
         data_tks = config.supabase.table(tabla_tks_db[sucursal]).select(cols_tks).eq("fecha", fecha).execute().data
         # Creamos los Dataframe
         df_inv = pd.DataFrame(data_inv)
-        print(df_inv.columns)
         df_tks = pd.DataFrame(data_tks)
         # Renombrar la columna 'fecha_estatus' a 'fecha_venta' y 'hora_estatus' a 'hora_venta'
         df_inv.rename(columns={'fecha_estatus': 'fecha_venta', 'hora_estatus': 'hora_venta'}, inplace=True)
-        # Sí el tipo de combo es COMPENSACION se hará cero el costo
-        df_inv['costo_neto_producto'] = np.where(df_inv['tipo_combo'] == 'COMPENSACION', 0, df_inv['costo_neto_producto'])
         if df_inv.empty!=False:
             st.warning(f"La sucursal de {sucursal} no tiene ventas para la fecha {fecha}.")
         else:
+            # Sí el tipo de combo es COMPENSACION se hará cero el costo
+            df_inv['costo_neto_producto'] = np.where(df_inv['tipo_combo'] == 'COMPENSACION', 0, df_inv['costo_neto_producto'])
             # Realizar el merge entre df_inv y df_ventas en base a la columna 'no_ticket'
             df_new = pd.merge(df_inv, df_tks, on='no_ticket')
             # Venta total

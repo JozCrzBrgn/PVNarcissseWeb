@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 import streamlit as st
 import streamlit_authenticator as stauth
 
@@ -93,9 +94,11 @@ elif authentication_status:
             else:
                 # Concatenar los dataframes
                 data_inv = pd.concat(dfs)
+                # Sí el tipo de combo es COMPENSACION se hará cero el costo
+                data_inv['costo_neto_producto'] = np.where(data_inv['tipo_combo'] == 'COMPENSACION', 0, data_inv['costo_neto_producto'])
                 # Quitamos las columnas que no necesitamos
                 df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
-                # Convertimos la columna de caducidad a datetime
+                # Convertimos la columna de 'fecha_estatus' a datetime
                 df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
                 # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
                 df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
@@ -131,6 +134,8 @@ elif authentication_status:
             # Creamos el Dataframe
             data_inv = pd.DataFrame(data_inv)
             data_abonos = pd.DataFrame(data_abonos)
+            # Sí el tipo de combo es COMPENSACION se hará cero el costo
+            data_inv['costo_neto_producto'] = np.where(data_inv['tipo_combo'] == 'COMPENSACION', 0, data_inv['costo_neto_producto'])
             # Quitamos las columnas que no necesitamos
             df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
             data_abonos = data_abonos[['clave', 'cantidad_abonada', 'fecha_abono','hora_abono']]

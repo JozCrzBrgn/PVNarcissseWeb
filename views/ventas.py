@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 import streamlit as st
 import streamlit_authenticator as stauth
 
@@ -64,15 +65,18 @@ elif authentication_status:
             }
         #? ANALISIS DE DATOS
         # Obtenemos los datos de la DB
-        cols_inv = "clave,producto,costo_neto_producto,fecha_estatus,hora_estatus,no_ticket"
+        cols_inv = "*"#!"clave,producto,costo_neto_producto,fecha_estatus,hora_estatus,no_ticket,tipo_combo"
         data_inv = config.supabase.table(tabla_inv_db[sucursal]).select(cols_inv).eq("fecha_estatus", fecha).eq("estatus", "VENDIDO").execute().data
         cols_tks = "no_ticket,nombre_cajero"
         data_tks = config.supabase.table(tabla_tks_db[sucursal]).select(cols_tks).eq("fecha", fecha).execute().data
         # Creamos los Dataframe
         df_inv = pd.DataFrame(data_inv)
+        print(df_inv.columns)
         df_tks = pd.DataFrame(data_tks)
-        # Renombrar la columna 'tipo_combo' a 'promocion'
+        # Renombrar la columna 'fecha_estatus' a 'fecha_venta' y 'hora_estatus' a 'hora_venta'
         df_inv.rename(columns={'fecha_estatus': 'fecha_venta', 'hora_estatus': 'hora_venta'}, inplace=True)
+        # Sí el tipo de combo es COMPENSACION se hará cero el costo
+        df_inv['costo_neto_producto'] = np.where(df_inv['tipo_combo'] == 'COMPENSACION', 0, df_inv['costo_neto_producto'])
         if df_inv.empty!=False:
             st.warning(f"La sucursal de {sucursal} no tiene ventas para la fecha {fecha}.")
         else:

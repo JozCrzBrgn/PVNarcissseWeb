@@ -48,17 +48,6 @@ elif authentication_status:
         # Meta a alcanzar
         grafico_velocimetro(ventas_sum_dic['Agri'], metas_dic['Agri'])
 
-        #* ################
-        #* NEZAHUALCOYOTL #
-        #* ################
-        st.header("Nezahualcóyotl")
-        # Marcador de métas
-        meta(metas_dic['Neza'], int(ventas_sum_dic['Neza']-metas_dic['Neza']))
-        # Ventas por día
-        grafico_barras(ventas_df_dic['Neza'])
-        # Meta a alcanzar
-        grafico_velocimetro(ventas_sum_dic['Neza'], metas_dic['Neza'])
-
         #* ############
         #* ZAPOTITLAN #
         #* ############
@@ -80,14 +69,3 @@ elif authentication_status:
         grafico_barras(ventas_df_dic['Oaxte'])
         # Meta a alcanzar
         grafico_velocimetro(ventas_sum_dic['Oaxte'], metas_dic['Oaxte'])
-
-        #* ###########
-        #* PANTITLAN #
-        #* ###########
-        st.header("Pantitlán")
-        # Marcador de métas
-        meta(metas_dic['Panti'], int(ventas_sum_dic['Panti']-metas_dic['Panti']))
-        # Ventas por día
-        grafico_barras(ventas_df_dic['Panti'])
-        # Meta a alcanzar
-        grafico_velocimetro(ventas_sum_dic['Panti'], metas_dic['Panti'])

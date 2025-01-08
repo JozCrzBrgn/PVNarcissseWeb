@@ -82,88 +82,34 @@ elif authentication_status:
         
         # Checamos como quiere filtrar el cliente
         rad_btn = st.radio("Selecciona un filtro", ["Fecha de pedido", "Fecha de entrega"])
+
         if rad_btn == "Fecha de pedido":
+            # FILTROS POR RANGO
             col1_1, col1_2  = st.columns(2)
             with col1_1:
-                #? FILTROS POR MES
-                # Extraer los meses de la columna de fechas
-                df_pc_sort['mes'] = df_pc_sort['fecha_pedido'].dt.month
-                df_pc_sort['dia'] = df_pc_sort['fecha_pedido'].dt.day
-
-                # Definir los nombres de los meses
-                meses = {
-                    1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
-                    5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
-                    9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
-                }
-
-                # Filtro por mes, inicializando en enero (mes 1)
-                mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
-                # Filtrar el DataFrame según el mes seleccionado
-                df_filtrado = df_pc_sort[df_pc_sort['mes'] == mes_seleccionado]
-
+                fecha_inicial = st.date_input("Fecha inicial")
             with col1_2:
-                #? FILTROS POR DÍAS
-                # Verificar si el DataFrame filtrado está vacío
-                if df_filtrado.empty:
-                    st.warning(f"No hay datos disponibles para {meses[mes_seleccionado]}.")
-                else:
-                    # Obtener los días disponibles para el mes seleccionado
-                    dia_min = df_filtrado['dia'].min()
-                    dia_max = df_filtrado['dia'].max()
-
-                    # Filtro por número de día usando un slider
-                    dias_seleccionados = st.slider(
-                        'Filtrar por días:',
-                        min_value=dia_min,
-                        max_value=dia_max,
-                        value=(dia_min, dia_max)
-                    )
-                    # Filtrar el DataFrame según los días seleccionados
-                    df_filtrado = df_filtrado[(df_filtrado['dia'] >= dias_seleccionados[0]) & (df_filtrado['dia'] <= dias_seleccionados[1])]
+                fecha_final = st.date_input("Fecha Final")
+            # Convertir fechas seleccionadas a datetime.datetime
+            fecha_inicial = pd.to_datetime(fecha_inicial)
+            fecha_final = pd.to_datetime(fecha_final)
+            # Filtrar el DataFrame según los días seleccionados
+            df_filtrado = df_pc_sort[(df_pc_sort['fecha_pedido'] >= fecha_inicial) & (df_pc_sort['fecha_pedido'] <= fecha_final)]
             df_filtrado = df_filtrado[['clave','cliente','fecha_pedido','fecha_entrega','hora_entrega','empleado','comision_empleado','descuento','flete','extras']]
             df_filtrado.rename(columns={'descuento': 'costo_pastel'}, inplace=True)
             st.table(df_filtrado)
         else:
+            # FILTROS POR RANGO
             col1_1, col1_2  = st.columns(2)
             with col1_1:
-                #? FILTROS POR MES
-                # Extraer los meses de la columna de fechas
-                df_pc_sort['mes'] = df_pc_sort['fecha_entrega'].dt.month
-                df_pc_sort['dia'] = df_pc_sort['fecha_entrega'].dt.day
-
-                # Definir los nombres de los meses
-                meses = {
-                    1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
-                    5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
-                    9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
-                }
-
-                # Filtro por mes, inicializando en enero (mes 1)
-                mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
-
-                # Filtrar el DataFrame según el mes seleccionado
-                df_filtrado = df_pc_sort[df_pc_sort['mes'] == mes_seleccionado]
-
+                fecha_inicial = st.date_input("Fecha inicial")
             with col1_2:
-                #? FILTROS POR DÍAS
-                # Verificar si el DataFrame filtrado está vacío
-                if df_filtrado.empty:
-                    st.warning(f"No hay datos disponibles para {meses[mes_seleccionado]}.")
-                else:
-                    # Obtener los días disponibles para el mes seleccionado
-                    dia_min = df_filtrado['dia'].min()
-                    dia_max = df_filtrado['dia'].max()
-
-                    # Filtro por número de día usando un slider
-                    dias_seleccionados = st.slider(
-                        'Filtrar por días:',
-                        min_value=dia_min,
-                        max_value=dia_max,
-                        value=(dia_min, dia_max)
-                    )
-                    # Filtrar el DataFrame según los días seleccionados
-                    df_filtrado = df_filtrado[(df_filtrado['dia'] >= dias_seleccionados[0]) & (df_filtrado['dia'] <= dias_seleccionados[1])]
+                fecha_final = st.date_input("Fecha Final")
+            # Convertir fechas seleccionadas a datetime.datetime
+            fecha_inicial = pd.to_datetime(fecha_inicial)
+            fecha_final = pd.to_datetime(fecha_final)
+            # Filtrar el DataFrame según los días seleccionados
+            df_filtrado = df_pc_sort[(df_pc_sort['fecha_entrega'] >= fecha_inicial) & (df_pc_sort['fecha_entrega'] <= fecha_final)]
             df_filtrado = df_filtrado[['clave','cliente','fecha_pedido','fecha_entrega','hora_entrega','empleado','comision_empleado','descuento','flete','extras']]
             df_filtrado.rename(columns={'descuento': 'costo_pastel'}, inplace=True)
             st.table(df_filtrado)
@@ -178,8 +124,7 @@ elif authentication_status:
         df_abonos.columns = ['clave','sucursal','fecha','hora','efectivo','tarjeta','transferencia','total_dia']
         df_abonos['fecha'] = pd.to_datetime(df_abonos['fecha'])
         # Filtramos por clave
-        abonos_tbl = df_abonos[df_abonos['fecha'].dt.month == mes_seleccionado]
-        abonos_tbl = abonos_tbl[(abonos_tbl['fecha'].dt.day >= dias_seleccionados[0]) & (abonos_tbl['fecha'].dt.day <= dias_seleccionados[1])]
+        abonos_tbl = df_abonos[(df_abonos['fecha'] >= fecha_inicial) & (df_abonos['fecha'] <= fecha_final)]
         # Mostramos el total
         col41, col42 = st.columns([4,1])
         with col41:

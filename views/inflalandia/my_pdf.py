@@ -74,17 +74,22 @@ def CrearPDF(df, nombre_sucursal, image_sucursal, dir_sucursal):
     pdf.ln(2)
 
     for row in df.values:
-      pdf.set_fill_color(255, 255, 255)
-      pdf.set_font('helvetica', 'B', 8)
-      altura = 10
-      pdf.cell(w=22, h=altura, txt=row[0], border=1, align='C', fill=1) # CLAVE
-      pdf.cell(w=45, h=altura, txt=row[3], border=1, align='C', fill=1) # DÍA
-      pdf.cell(w=12, h=altura, txt=row[4][:-3], border=1, align='C', fill=1) # HORA
-      pdf.cell(w=30, h=altura, txt=row[1], border=1, align='C', fill=1) # CUMPLEAÑEROX
-      pdf.cell(w=12, h=altura, txt=str(row[2]) + " PX", border=1, align='C', fill=1) # PX
-      pdf.cell(w=55, h=altura, txt=row[5].upper(), border=1, align='C', fill=1) # RELLENO
-      pdf.multi_cell(w=15, h=altura, txt="$"+str(row[6]), border=1, align='C', fill=1) # COSTO
-      pdf.set_text_color(0, 0, 0)
+        pdf.set_fill_color(255, 255, 255)
+        pdf.set_font('helvetica', 'B', 8)
+        altura = 10
+        pdf.cell(w=22, h=altura, txt=row[0], border=1, align='C', fill=1) # CLAVE
+        pdf.cell(w=45, h=altura, txt=row[3], border=1, align='C', fill=1) # DÍA
+        pdf.cell(w=12, h=altura, txt=row[4][:-3], border=1, align='C', fill=1) # HORA
+        pdf.cell(w=30, h=altura, txt=row[1], border=1, align='C', fill=1) # CUMPLEAÑEROX
+        pdf.cell(w=12, h=altura, txt=str(row[2]) + " PX", border=1, align='C', fill=1) # PX
+        pdf.cell(w=55, h=altura, txt=row[5].upper(), border=1, align='C', fill=1) # RELLENO
+        pdf.multi_cell(w=15, h=altura, txt="$"+str(row[6]), border=1, align='C', fill=1) # COSTO
+        pdf.set_fill_color(217, 217, 217)
+        pdf.cell(w=22, h=altura, txt="LEYENDA", border=1, align='C', fill=1)
+        pdf.set_text_color(0, 0, 0)
+        pdf.set_fill_color(255, 255, 255)
+        pdf.multi_cell(w=70, h=altura, txt=row[7], border=1, align='C', fill=1) # LEYENDA
+        pdf.ln(2)
     
     pdf.add_page()
 

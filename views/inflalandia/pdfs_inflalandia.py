@@ -84,12 +84,12 @@ elif authentication_status:
             pedidos_imprimir = st.multiselect("Selecciona los pedidos a imprimir", lista_ids)
 
             if st.button("Generar PDF 📑"):
-                data_celeb = config.supabase.table(tabs_pedidos[sucursal_infla]).select("clave,cliente,fecha_entrega,hora_entrega,personas,relleno,costo_total").execute().data
+                data_celeb = config.supabase.table(tabs_pedidos[sucursal_infla]).select("clave,cliente,fecha_entrega,hora_entrega,personas,relleno,costo_total,leyenda").execute().data
                 df_pedidos_celeb = pd.DataFrame(data_celeb)
                 df_pedidos_seleccionados = df_pedidos_celeb[df_pedidos_celeb['clave'].isin(pedidos_imprimir)]
                 df_pedidos_seleccionados['fecha_entrega'] = pd.to_datetime(df_pedidos_seleccionados['fecha_entrega'])
                 df_pedidos_seleccionados['fecha_formateda'] = df_pedidos_seleccionados['fecha_entrega'].apply(formatear_fecha)
-                df_pdf = df_pedidos_seleccionados[['clave', 'cliente', 'personas', 'fecha_formateda', 'hora_entrega', 'relleno', 'costo_total']]
+                df_pdf = df_pedidos_seleccionados[['clave', 'cliente', 'personas', 'fecha_formateda', 'hora_entrega', 'relleno', 'costo_total', 'leyenda']]
                 file = CrearPDF(df_pdf, sucursal_infla, imgs_pedidos[sucursal_infla], dir_pedidos[sucursal_infla])
                 # Proporcionar un botón para descargar el PDF
                 with open(file, "rb") as f:

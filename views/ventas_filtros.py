@@ -147,6 +147,25 @@ elif authentication_status:
 
         col1_1, col1_2  = st.columns(2)
         with col1_1:
+            #? FILTROS POR AÑO
+            # Extraer el año de la columna de fechas
+            df_inv['anio'] = df_inv['fecha_estatus'].dt.year
+            data_abonos['anio'] = data_abonos['fecha_abono'].dt.year
+
+            # Obtener los años disponibles en el DataFrame
+            anio_min = df_inv['anio'].min()
+            anio_max = df_inv['anio'].max()
+            # Filtro por año usando un slider
+            anio_seleccionado = st.slider(
+                'Filtrar por año:', 
+                min_value=anio_min,
+                max_value=anio_max,
+                value=(anio_min, anio_max)
+            )
+            # Filtrar el DataFrame según el año seleccionado
+            df_inv = df_inv[(df_inv['anio'] >= anio_seleccionado[0]) & (df_inv['anio'] <= anio_seleccionado[1])]
+            data_abonos = data_abonos[(data_abonos['anio'] >= anio_seleccionado[0]) & (data_abonos['anio'] <= anio_seleccionado[1])]
+
             #? FILTROS POR MES
             # Extraer los meses de la columna de fechas
             df_inv['mes'] = df_inv['fecha_estatus'].dt.month

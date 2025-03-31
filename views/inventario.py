@@ -1,15 +1,11 @@
 
 from io import BytesIO
-
 import pandas as pd
 from datetime import datetime as dt
 from datetime import timedelta as td 
-
 import streamlit as st
 import streamlit_authenticator as stauth
-
 from config.configuration import config, read_json_from_supabase
-
 
 #* USER AUTHENTICATION
 credenciales = read_json_from_supabase(config.BUCKET_GENERAL, config.CREDENCIALES_FILE)
@@ -33,14 +29,14 @@ elif authentication_status:
         authenticator.logout('Logout', 'main')
     
     st.title("inventarios")
+    #TODO: ["Nezahualcóyotl", "Pantitlán", "Tonanitla", "Tizayuca", "Chimalhuacán", "Chicoloapan"]
 
     if name=="Juan Tinajero" or name=="Sr. Silvia":
         st.text("En construcción 🏗️🚧👷🏼‍♂️...")
     else:
         sucursal = st.segmented_control(
             "Selecciona una sucursal", 
-            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", 
-            "Chimalhuacán", "Chicoloapan"], 
+            ["Agrícola Oriental", "Zapotitlán", "Oaxtepec"], 
             default="Agrícola Oriental"
             )
         tabla_inv_db = {

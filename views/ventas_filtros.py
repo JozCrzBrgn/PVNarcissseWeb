@@ -34,8 +34,7 @@ elif authentication_status:
     else:
         sucursal = st.segmented_control(
             "Selecciona una sucursal", 
-            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", 
-             "Chimalhuacán", "Chicoloapan", "Todas"], 
+            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Todas"], 
             default="Agrícola Oriental"
             )
 
@@ -46,9 +45,6 @@ elif authentication_status:
             "Oaxtepec":"db04_inventario_oaxt", 
             "Pantitlán":"db04_inventario_panti",
             "Tonanitla":"db04_inventario_tona",
-            "Tizayuca":"db04_inventario_tiza",
-            "Chimalhuacán":"db04_inventario_chim",
-            "Chicoloapan":"db04_inventario_chic",
             }
         tabla_tks_db = {
             "Agrícola Oriental":"db05_tickets_agri", 
@@ -57,9 +53,6 @@ elif authentication_status:
             "Oaxtepec":"db05_tickets_oaxt", 
             "Pantitlán":"db05_tickets_panti",
             "Tonanitla":"db05_tickets_tona",
-            "Tizayuca":"db05_tickets_tiza",
-            "Chimalhuacán":"db05_tickets_chim",
-            "Chicoloapan":"db05_tickets_chic",
             }
         tabla_abn_db = {
             "Agrícola Oriental":"db03_abonos_celebracion_agri",
@@ -68,9 +61,6 @@ elif authentication_status:
             "Oaxtepec":"db03_abonos_celebracion_oaxt",
             "Pantitlán": "db03_abonos_celebracion_panti",
             "Tonanitla":"db03_abonos_celebracion_tona",
-            "Tizayuca":"db03_abonos_celebracion_tiza",
-            "Chimalhuacán":"db03_abonos_celebracion_chim",
-            "Chicoloapan":"db03_abonos_celebracion_chic",
             }
             
         

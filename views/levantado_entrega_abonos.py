@@ -43,9 +43,6 @@ elif authentication_status:
             ["db02_pedidos_celebracion_oceania","db03_abonos_celebracion_oceania"],
             ["db02_pedidos_celebracion_tlane","db03_abonos_celebracion_tlane"],
             ["db02_pedidos_celebracion_tona","db03_abonos_celebracion_tona"],
-            ["db02_pedidos_celebracion_tiza","db03_abonos_celebracion_tiza"],
-            ["db02_pedidos_celebracion_chim","db03_abonos_celebracion_chim"],
-            ["db02_pedidos_celebracion_chic","db03_abonos_celebracion_chic"],
             ]
         ls_pc = []
         ls_ab = []

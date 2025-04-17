@@ -69,21 +69,25 @@ crear_pedido_inflalandia = st.Page(
     title="🆕Crear pedido inflalandia",
     icon="🦆"
 )
+
 crear_pedido_inflalandia_caro = st.Page(
     page="views/inflalandia/crear_pedido_inflalandia_caro.py",
     title="🆕Crear pedido inflalandia Nuevos",
     icon="🦆"
 )
+
 editar_pedido_inflalandia = st.Page(
     page="views/inflalandia/editar_pedido_inflalandia.py",
     title="📝Editar pedido inflalandia",
     icon="🦆"
 )
+
 abonos_inflalandia = st.Page(
     page="views/inflalandia/abonos_inflalandia.py",
     title="💵Abonos inflalandia",
     icon="🦆"
 )
+
 pdfs_inflalandia = st.Page(
     page="views/inflalandia/pdfs_inflalandia.py",
     title="⬇️PDF inflalandia",

@@ -34,8 +34,7 @@ elif authentication_status:
     else:
         sucursal = st.segmented_control(
             "Selecciona un sucursal", 
-            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Tizayuca", 
-             "Chimalhuacán", "Chicoloapan"]
+            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla"]
             )
         
         
@@ -46,9 +45,6 @@ elif authentication_status:
             "Oaxtepec":"db04_inventario_oaxt", 
             "Pantitlán":"db04_inventario_panti",
             "Tonanitla":"db04_inventario_tona",
-            "Tizayuca":"db04_inventario_tiza",
-            "Chimalhuacán":"db04_inventario_chim",
-            "Chicoloapan":"db04_inventario_chic",
             }
 
         if sucursal!=None:

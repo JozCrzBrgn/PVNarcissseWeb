@@ -36,7 +36,7 @@ elif authentication_status:
     else:
         sucursal = st.segmented_control(
             "Selecciona una sucursal", 
-            ["Agrícola Oriental", "Zapotitlán", "Oaxtepec"], 
+            ["Agrícola Oriental", "Zapotitlán", "Oaxtepec", "Tonanitla"], 
             default="Agrícola Oriental"
             )
         tabla_inv_db = {

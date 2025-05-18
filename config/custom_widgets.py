@@ -9,7 +9,7 @@ def meta(valor_meta, diferencia_meta):
         label_visibility="collapsed",
     )
 
-def grafico_barras(df):
+def grafico_barras(df, key):
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=df['Fecha'],
@@ -17,7 +17,7 @@ def grafico_barras(df):
         text=df['Ventas'],
         marker_color='#3cd8b9',
     ))
-    # Ajustar el diseño del gráfico
+
     fig.update_layout(
         xaxis_title='Fecha',
         yaxis_title='Ventas',
@@ -25,10 +25,10 @@ def grafico_barras(df):
         margin=dict(t=20, b=0, l=40, r=10),
         height=250,
     )
-    # Mostrar el gráfico en Streamlit
-    return st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    return st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False}, key=key)
 
-def grafico_velocimetro(ventas_actuales, ventas_objetivo):
+
+def grafico_velocimetro(ventas_actuales, ventas_objetivo, key):
     if ventas_actuales >= ventas_objetivo:
         color = "green"
     elif ventas_actuales >= ventas_objetivo/2:
@@ -50,4 +50,4 @@ def grafico_velocimetro(ventas_actuales, ventas_objetivo):
     # Ajustar los márgenes para reducir el espacio vacío
     fig1.update_layout(margin=dict(t=0, b=100, l=50, r=50))
     # Mostrar el gráfico en Streamlit
-    return st.plotly_chart(fig1, use_container_width=False, config={'displayModeBar': False})
+    return st.plotly_chart(fig1, use_container_width=False, config={'displayModeBar': False}, key=key)

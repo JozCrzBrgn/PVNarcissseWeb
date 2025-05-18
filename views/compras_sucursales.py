@@ -34,7 +34,7 @@ elif authentication_status:
     else:
         sucursal = st.segmented_control(
             "Selecciona un sucursal", 
-            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla"]
+            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Iztapalapa"]
             )
         
         
@@ -44,6 +44,7 @@ elif authentication_status:
             "Zapotitlán":"db04_inventario_zapo", 
             "Oaxtepec":"db04_inventario_oaxt", 
             "Pantitlán":"db04_inventario_panti",
+            "Iztapalapa":"db04_inventario_iztapalapa",
             "Tonanitla":"db04_inventario_tona",
             }
 

@@ -44,9 +44,9 @@ elif authentication_status:
         # Marcador de métas
         meta(metas_dic['Agri'], int(ventas_sum_dic['Agri']-metas_dic['Agri']))
         # Ventas por día
-        grafico_barras(ventas_df_dic['Agri'])
+        grafico_barras(ventas_df_dic['Agri'], key="ventas_agri")
         # Meta a alcanzar
-        grafico_velocimetro(ventas_sum_dic['Agri'], metas_dic['Agri'])
+        grafico_velocimetro(ventas_sum_dic['Agri'], metas_dic['Agri'], key="velocimetro_agri")
 
         #* ############
         #* ZAPOTITLAN #
@@ -55,9 +55,9 @@ elif authentication_status:
         # Marcador de métas
         meta(metas_dic['Zapo'], int(ventas_sum_dic['Zapo']-metas_dic['Zapo']))
         # Ventas por día
-        grafico_barras(ventas_df_dic['Zapo'])
+        grafico_barras(ventas_df_dic['Zapo'], key="ventas_zapo")
         # Meta a alcanzar
-        grafico_velocimetro(ventas_sum_dic['Zapo'], metas_dic['Zapo'])
+        grafico_velocimetro(ventas_sum_dic['Zapo'], metas_dic['Zapo'], key="velocimetro_zapo")
 
         #* ##########
         #* OAXTEPEC #
@@ -66,6 +66,39 @@ elif authentication_status:
         # Marcador de métas
         meta(metas_dic['Oaxte'], int(ventas_sum_dic['Oaxte']-metas_dic['Oaxte']))
         # Ventas por día
-        grafico_barras(ventas_df_dic['Oaxte'])
+        grafico_barras(ventas_df_dic['Oaxte'], key="ventas_oaxte")
         # Meta a alcanzar
-        grafico_velocimetro(ventas_sum_dic['Oaxte'], metas_dic['Oaxte'])
+        grafico_velocimetro(ventas_sum_dic['Oaxte'], metas_dic['Oaxte'], key="velocimetro_oaxte")
+
+        #* ###########
+        #* PANTITLAN #
+        #* ###########
+        st.header("Pantitlán")
+        # Marcador de métas
+        meta(metas_dic['Panti'], int(ventas_sum_dic['Panti']-metas_dic['Panti']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Panti'], key="ventas_panti")
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Panti'], metas_dic['Panti'], key="velocimetro_panti")
+
+        #* ############
+        #* IZTAPALAPA #
+        #* ############
+        st.header("Iztapalapa")
+        # Marcador de métas
+        meta(metas_dic['Iztapa'], int(ventas_sum_dic['Iztapa']-metas_dic['Iztapa']))
+        # Ventas por día
+        grafico_barras(ventas_df_dic['Iztapa'], key="ventas_iztapa")
+        # Meta a alcanzar
+        grafico_velocimetro(ventas_sum_dic['Iztapa'], metas_dic['Iztapa'], key="velocimetro_iztapa")
+
+        #* ###########
+        #* TONANITLA #
+        #* ###########
+        #!st.header("Tonanitla")
+        # Marcador de métas
+        #!meta(metas_dic['Tona'], int(ventas_sum_dic['Tona']-metas_dic['Tona']))
+        # Ventas por día
+        #!grafico_barras(ventas_df_dic['Tona'], key="ventas_tona")
+        # Meta a alcanzar
+        #!grafico_velocimetro(ventas_sum_dic['Tona'], metas_dic['Tona'], key="velocimetro_tona")

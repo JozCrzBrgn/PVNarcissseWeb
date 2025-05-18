@@ -43,6 +43,7 @@ elif authentication_status:
             ["db02_pedidos_celebracion_oceania","db03_abonos_celebracion_oceania"],
             ["db02_pedidos_celebracion_tlane","db03_abonos_celebracion_tlane"],
             ["db02_pedidos_celebracion_tona","db03_abonos_celebracion_tona"],
+            ["db02_pedidos_celebracion_iztapalapa","db03_abonos_celebracion_iztapalapa"],
             ]
         tabla_img_db = {
             "AG":"agri", 
@@ -55,6 +56,7 @@ elif authentication_status:
             "OC":"oceania",
             "TL":"tlane",
             "TO":"tona",
+            "IZ":"iztapalapa",
             }
         
         def img_url(clave, carpeta):

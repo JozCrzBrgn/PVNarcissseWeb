@@ -34,7 +34,7 @@ elif authentication_status:
     else:
         sucursal = st.segmented_control(
             "Selecciona una sucursal", 
-            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Tonanitla", "Todas"], 
+            ["Agrícola Oriental", "Nezahualcóyotl", "Zapotitlán", "Oaxtepec", "Pantitlán", "Iztapalapa", "Tonanitla", "Todas"], 
             default="Agrícola Oriental"
             )
 
@@ -45,6 +45,7 @@ elif authentication_status:
             "Oaxtepec":"db04_inventario_oaxt", 
             "Pantitlán":"db04_inventario_panti",
             "Tonanitla":"db04_inventario_tona",
+            "Iztapalapa":"db04_inventario_iztapalapa",
             }
         tabla_tks_db = {
             "Agrícola Oriental":"db05_tickets_agri", 
@@ -53,6 +54,7 @@ elif authentication_status:
             "Oaxtepec":"db05_tickets_oaxt", 
             "Pantitlán":"db05_tickets_panti",
             "Tonanitla":"db05_tickets_tona",
+            "Iztapalapa":"db05_tickets_iztapalapa",
             }
         tabla_abn_db = {
             "Agrícola Oriental":"db03_abonos_celebracion_agri",
@@ -61,6 +63,7 @@ elif authentication_status:
             "Oaxtepec":"db03_abonos_celebracion_oaxt",
             "Pantitlán": "db03_abonos_celebracion_panti",
             "Tonanitla":"db03_abonos_celebracion_tona",
+            "Iztapalapa":"db03_abonos_celebracion_iztapalapa",
             }
             
         
@@ -124,128 +127,153 @@ elif authentication_status:
             # Creamos el Dataframe
             data_inv = pd.DataFrame(data_inv)
             data_abonos = pd.DataFrame(data_abonos)
-            # Sí el tipo de combo es COMPENSACION se hará cero el costo
-            data_inv['costo_neto_producto'] = np.where(data_inv['tipo_combo'] == 'COMPENSACION', 0, data_inv['costo_neto_producto'])
-            # Quitamos las columnas que no necesitamos
-            df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
-            data_abonos = data_abonos[['clave', 'cantidad_abonada', 'fecha_abono','hora_abono']]
-            # Convertimos la columna de fecha a datetime
-            df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
-            data_abonos['fecha_abono'] = pd.to_datetime(data_abonos['fecha_abono'])
-            # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
-            df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
+
+            if data_inv.empty:
+                st.warning("No tienes ningún pastel de celebración 😖😣😞.")
+            else:
+                # Sí el tipo de combo es COMPENSACION se hará cero el costo
+                data_inv['costo_neto_producto'] = np.where(data_inv['tipo_combo'] == 'COMPENSACION', 0, data_inv['costo_neto_producto'])
+                # Quitamos las columnas que no necesitamos
+                df_inv = data_inv[['clave', 'producto', 'categoria', 'tipo_combo','fecha_estatus', 'hora_estatus', 'costo_neto_producto']]
+                # Convertimos la columna de fecha a datetime
+                df_inv['fecha_estatus'] = pd.to_datetime(df_inv['fecha_estatus'])
+                # Cambiamos el nombre de la columna 'tipo_combo' a 'promocion'
+                df_inv.rename(columns={'tipo_combo': 'promocion'}, inplace=True)
+
+            if data_abonos.empty:
+                st.warning("No tienes ningún abono 😖😣😞.")
+            else:
+                data_abonos = data_abonos[['clave', 'cantidad_abonada', 'fecha_abono','hora_abono']]
+                # Convertimos la columna de fecha a datetime
+                data_abonos['fecha_abono'] = pd.to_datetime(data_abonos['fecha_abono'])
+                
 
         col1_1, col1_2  = st.columns(2)
-        with col1_1:
-            #? FILTROS POR AÑO
-            # Extraer el año de la columna de fechas
-            df_inv['anio'] = df_inv['fecha_estatus'].dt.year
-            data_abonos['anio'] = data_abonos['fecha_abono'].dt.year
+        # Mensajes si los DataFrames están vacíos
+        if df_inv.empty:
+            st.warning("No tienes ningún pastel de celebración 😖😣😞.")
+        if data_abonos.empty:
+            st.warning("No tienes ningún abono 😖😣😞.")
 
-            # Obtener los años disponibles en el DataFrame
-            anio_min = df_inv['anio'].min()
-            anio_max = df_inv['anio'].max()
-            # Filtro por año usando un slider
-            anio_seleccionado = st.slider(
-                'Filtrar por año:', 
-                min_value=anio_min,
-                max_value=anio_max,
-                value=(anio_min, anio_max)
-            )
-            # Filtrar el DataFrame según el año seleccionado
-            df_inv = df_inv[(df_inv['anio'] >= anio_seleccionado[0]) & (df_inv['anio'] <= anio_seleccionado[1])]
-            data_abonos = data_abonos[(data_abonos['anio'] >= anio_seleccionado[0]) & (data_abonos['anio'] <= anio_seleccionado[1])]
+        # Continuar si al menos uno tiene datos
+        if not df_inv.empty or not data_abonos.empty:
+            with col1_1:
+                #? FILTROS POR AÑO
+                if not df_inv.empty:
+                    df_inv['anio'] = df_inv['fecha_estatus'].dt.year
+                if not data_abonos.empty:
+                    data_abonos['anio'] = data_abonos['fecha_abono'].dt.year
 
-            #? FILTROS POR MES
-            # Extraer los meses de la columna de fechas
-            df_inv['mes'] = df_inv['fecha_estatus'].dt.month
-            df_inv['dia'] = df_inv['fecha_estatus'].dt.day
+                # Calcular rango de años disponibles
+                anios = []
+                if not df_inv.empty:
+                    anios.append(df_inv['anio'].min())
+                    anios.append(df_inv['anio'].max())
+                if not data_abonos.empty:
+                    anios.append(data_abonos['anio'].min())
+                    anios.append(data_abonos['anio'].max())
 
-            data_abonos['mes'] = data_abonos['fecha_abono'].dt.month
-            data_abonos['dia'] = data_abonos['fecha_abono'].dt.day
+                anio_min = min(anios)
+                anio_max = max(anios)
 
-            # Definir los nombres de los meses
-            meses = {
-                1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
-                5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
-                9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
-            }
-
-            # Filtro por mes, inicializando en enero (mes 1)
-            mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
-
-            # Filtrar el DataFrame según el mes seleccionado
-            df_filtrado = df_inv[df_inv['mes'] == mes_seleccionado]
-            df_filtrado_abono = data_abonos[data_abonos['mes'] == mes_seleccionado]
-
-        with col1_2:
-            #? FILTROS POR DÍAS
-            # Verificar si el DataFrame filtrado está vacío
-            if df_filtrado.empty:
-                st.warning(f"No hay datos disponibles para {meses[mes_seleccionado]}.")
-            else:
-                # Obtener los días disponibles para el mes seleccionado
-                dia_min = df_filtrado['dia'].min()
-                dia_max = df_filtrado['dia'].max()
-
-                # Filtro por número de día usando un slider
-                dias_seleccionados = st.slider(
-                    'Filtrar por días:',
-                    min_value=dia_min,
-                    max_value=dia_max,
-                    value=(dia_min, dia_max)
+                anio_seleccionado = st.slider(
+                    'Filtrar por año:',
+                    min_value=anio_min,
+                    max_value=anio_max,
+                    value=(anio_min, anio_max)
                 )
-                # Filtrar el DataFrame según los días seleccionados
-                df_filtrado = df_filtrado[(df_filtrado['dia'] >= dias_seleccionados[0]) & (df_filtrado['dia'] <= dias_seleccionados[1])]
-                df_filtrado_abono = df_filtrado_abono[(df_filtrado_abono['dia'] >= dias_seleccionados[0]) & (df_filtrado_abono['dia'] <= dias_seleccionados[1])]
 
-        if df_filtrado.empty==False:
-            col1, col2, col3, col4, col5  = st.columns(5)#[2,2,1])
-            with col1:
-                #? FILTROS POR CATEGORIA
-                # Widget para seleccionar una categoría
-                categoria_seleccionada = st.multiselect('Filtrar por categoría:', df_filtrado['categoria'].unique())
-                if categoria_seleccionada:
-                    df_filtrado = df_filtrado[df_filtrado['categoria'].isin(categoria_seleccionada)]
+                if not df_inv.empty:
+                    df_inv = df_inv[(df_inv['anio'] >= anio_seleccionado[0]) & (df_inv['anio'] <= anio_seleccionado[1])]
+                if not data_abonos.empty:
+                    data_abonos = data_abonos[(data_abonos['anio'] >= anio_seleccionado[0]) & (data_abonos['anio'] <= anio_seleccionado[1])]
+
+                #? FILTROS POR MES
+                meses = {
+                    1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
+                    5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
+                    9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
+                }
+
+                if not df_inv.empty:
+                    df_inv['mes'] = df_inv['fecha_estatus'].dt.month
+                    df_inv['dia'] = df_inv['fecha_estatus'].dt.day
+                if not data_abonos.empty:
+                    data_abonos['mes'] = data_abonos['fecha_abono'].dt.month
+                    data_abonos['dia'] = data_abonos['fecha_abono'].dt.day
+
+                mes_seleccionado = st.selectbox('Selecciona un mes:', options=list(meses.keys()), format_func=lambda x: meses[x], index=0)
+
+                df_filtrado = df_inv[df_inv['mes'] == mes_seleccionado] if not df_inv.empty else pd.DataFrame()
+                df_filtrado_abono = data_abonos[data_abonos['mes'] == mes_seleccionado] if not data_abonos.empty else pd.DataFrame()
+
+            with col1_2:
+                if df_filtrado.empty and df_filtrado_abono.empty:
+                    st.warning(f"No hay datos disponibles para {meses[mes_seleccionado]}.")
                 else:
-                    df_filtrado = df_filtrado  # Mostrar todo si no hay selección
-            with col2:
-                #? FILTROS POR PRODUCTOS
-                if categoria_seleccionada:
-                    # Solo mostrar productos que estén dentro de las categorías seleccionadas
+                    dias = []
+                    if not df_filtrado.empty:
+                        dias.append(df_filtrado['dia'].min())
+                        dias.append(df_filtrado['dia'].max())
+                    if not df_filtrado_abono.empty:
+                        dias.append(df_filtrado_abono['dia'].min())
+                        dias.append(df_filtrado_abono['dia'].max())
+
+                    dia_min = min(dias)
+                    dia_max = max(dias)
+
+                    dias_seleccionados = st.slider(
+                        'Filtrar por días:',
+                        min_value=dia_min,
+                        max_value=dia_max,
+                        value=(dia_min, dia_max)
+                    )
+
+                    if not df_filtrado.empty:
+                        df_filtrado = df_filtrado[(df_filtrado['dia'] >= dias_seleccionados[0]) & (df_filtrado['dia'] <= dias_seleccionados[1])]
+                    if not df_filtrado_abono.empty:
+                        df_filtrado_abono = df_filtrado_abono[(df_filtrado_abono['dia'] >= dias_seleccionados[0]) & (df_filtrado_abono['dia'] <= dias_seleccionados[1])]
+
+            # Mostrar paneles solo si hay datos
+            if not df_filtrado.empty:
+                col1, col2, col3, col4, col5 = st.columns(5)
+
+                with col1:
+                    categoria_seleccionada = st.multiselect('Filtrar por categoría:', df_filtrado['categoria'].unique())
+                    if categoria_seleccionada:
+                        df_filtrado = df_filtrado[df_filtrado['categoria'].isin(categoria_seleccionada)]
+
+                with col2:
                     productos_disponibles = df_filtrado['producto'].unique()
-                else:
-                    # Si no hay filtro de categoría, mostrar todos los productos
-                    productos_disponibles = df_filtrado['producto'].unique()
+                    producto_seleccionado = st.multiselect('Filtrar por producto:', productos_disponibles)
+                    if producto_seleccionado:
+                        df_filtrado = df_filtrado[df_filtrado['producto'].isin(producto_seleccionado)]
 
-                producto_seleccionado = st.multiselect('Filtrar por producto:', productos_disponibles)
-                if producto_seleccionado:
-                    df_filtrado = df_filtrado[df_filtrado['producto'].isin(producto_seleccionado)]
-            with col3:
-                #? FILTROS POR PRODUCTOS
-                # Widget para seleccionar una promocion
-                promocion_seleccionada = st.multiselect('Filtrar por promoción:', df_filtrado['promocion'].unique())
-                if promocion_seleccionada:
-                    df_filtrado = df_filtrado[df_filtrado['promocion'].isin(promocion_seleccionada)]
-                else:
-                    df_filtrado = df_filtrado  # Mostrar todo si no hay selección
-            with col4:
-                ventas = round(df_filtrado['costo_neto_producto'].sum(), 2)
-                st.metric("LÍNEA", f"$ {ventas} MXN")
-            with col5:
-                cant = round(df_filtrado['costo_neto_producto'].count(), 2)
-                st.metric("CANTIDAD", f"{cant}")
+                with col3:
+                    promocion_seleccionada = st.multiselect('Filtrar por promoción:', df_filtrado['promocion'].unique())
+                    if promocion_seleccionada:
+                        df_filtrado = df_filtrado[df_filtrado['promocion'].isin(promocion_seleccionada)]
 
-            # Mostrar tabla filtrada
-            st.table(df_filtrado[['clave', 'producto', 'categoria', 'promocion', 'fecha_estatus', 'hora_estatus', 'costo_neto_producto']])
-            if df_filtrado_abono.empty:
-                st.warning(f"No hay abonos disponibles para {meses[mes_seleccionado]}.")
-            else:
+                with col4:
+                    ventas = round(df_filtrado['costo_neto_producto'].sum(), 2)
+                    st.metric("LÍNEA", f"$ {ventas} MXN")
+
+                with col5:
+                    cant = round(df_filtrado['costo_neto_producto'].count(), 2)
+                    st.metric("CANTIDAD", f"{cant}")
+
+                st.table(df_filtrado[['clave', 'producto', 'categoria', 'promocion', 'fecha_estatus', 'hora_estatus', 'costo_neto_producto']])
+
+            if not df_filtrado_abono.empty:
                 col1, col2 = st.columns(2)
                 with col1:
                     abonos = round(df_filtrado_abono['cantidad_abonada'].sum(), 2)
                     st.metric("ABONOS", f"$ {abonos} MXN")
                 with col2:
+                    ventas = ventas if 'ventas' in locals() else 0
                     total = ventas + abonos
                     st.metric("VENTA TOTAL", f"$ {total} MXN")
+
                 st.table(df_filtrado_abono[["clave", "cantidad_abonada", "fecha_abono", "hora_abono"]])
+            elif not data_abonos.empty:
+                st.warning(f"No hay abonos disponibles para {meses[mes_seleccionado]}.")

@@ -16,14 +16,16 @@ def metas_sucursales():
         'Neza': float(data['meta_neza']),
         'Zapo': float(data['meta_zapo']),
         'Oaxte': float(data['meta_oaxt']),
-        'Panti': float(data['meta_panti'])
+        'Panti': float(data['meta_panti']),
+        'Iztapa': float(data['meta_iztapalapa']),
+        'Tona': float(data['meta_tona']),
     }
     return metas_dic
 
 def ventas_sucursales():
     # Obtener los nombres de las tablas
-    list_tk = ['db05_tickets_agri', 'db05_tickets_zapo', 'db05_tickets_oaxt', 'db05_tickets_tona']
-    list_ab = ['db03_abonos_celebracion_agri', 'db03_abonos_celebracion_zapo', 'db03_abonos_celebracion_oaxt', 'db03_abonos_celebracion_tona']
+    list_tk = ['db05_tickets_agri', 'db05_tickets_zapo', 'db05_tickets_oaxt', 'db05_tickets_panti', 'db05_tickets_iztapalapa', 'db05_tickets_tona']
+    list_ab = ['db03_abonos_celebracion_agri', 'db03_abonos_celebracion_zapo', 'db03_abonos_celebracion_oaxt', 'db03_abonos_celebracion_panti', 'db03_abonos_celebracion_iztapalapa', 'db03_abonos_celebracion_tona']
     # Obtenemos las fechas del mes
     dia_hoy = dt.now().strftime("%Y-%m-%d")
     inicio_mes = dt.now().strftime("%Y-%m-01")
@@ -85,6 +87,7 @@ def ventas_sucursales():
 
     if df_tickets.empty:
         df_tickets = pd.DataFrame(columns=['Fecha', 'sucursal', 'total_ticket'])
+    
     # unimos los dataframes con el mismo dia
     df = pd.merge(df_abonos, df_tickets, on=['Fecha', 'sucursal'], how='outer')
     # rellenamos los valores nulos con 0
@@ -98,12 +101,16 @@ def ventas_sucursales():
     df_neza = df[df['sucursal']=='Nezahualcoyotl']
     df_zapo = df[df['sucursal']=='Zapotitlan']
     df_oaxt = df[df['sucursal']=='Oaxtepec']
+    df_panti = df[df['sucursal']=='Pantitlan']
+    df_iztapa = df[df['sucursal']=='Iztapalapa']
     df_tona = df[df['sucursal']=='Tonanitla']
     ventas_df_dic = {
         'Agri': df_agri,
         'Neza': df_neza,
         'Zapo': df_zapo,
         'Oaxte': df_oaxt,
+        'Panti': df_panti,
+        'Iztapa': df_iztapa,
         'Tona': df_tona
     }
     ventas_sum_dic = {
@@ -111,6 +118,8 @@ def ventas_sucursales():
         'Neza': df_neza['Ventas'].sum(),
         'Zapo': df_zapo['Ventas'].sum(),
         'Oaxte': df_oaxt['Ventas'].sum(),
+        'Panti': df_panti['Ventas'].sum(),
+        'Iztapa': df_iztapa['Ventas'].sum(),
         'Tona': df_tona['Ventas'].sum()
     }
     return ventas_df_dic, ventas_sum_dic

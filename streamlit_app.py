@@ -100,16 +100,32 @@ agregar_producto = st.Page(
     icon="🎂"
 )
 
-#? --- NAVEGATION SETUP [WITH SECTIONS] ---#
-pg = st.navigation(
-    {
-        "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page, compras_sucursales_page],
-        "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
-        "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
-        "Alta de Productos": [agregar_producto],
-        "Métricas": [metas_page],
-    }
+costos_distribuidores = st.Page(
+    page="views/distribuidores/costos_distribuidores.py",
+    title="Costos Distribuidores",
+    icon="🧮"
 )
+
+
+#? --- NAVEGATION SETUP [WITH SECTIONS] ---#
+
+nav_dict = {
+    "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page, compras_sucursales_page],
+    "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
+    "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
+    "Alta de Productos": [agregar_producto],
+    "Métricas": [metas_page],
+    }
+
+from config.auth import authenticate_user
+
+name, auth_status, username = authenticate_user()
+
+# Solo si el usuario es admin, agrega la sección Distribuidores
+if username == "admin":  # o usa un campo de rol si lo tienes
+    nav_dict["Distribuidores"] = [costos_distribuidores]
+
+pg = st.navigation(nav_dict)
 
 #? --- SHARE ON ALL PAGES ---#
 st.logo("assets/narcisse.png")

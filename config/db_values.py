@@ -1,12 +1,6 @@
-
-
-
 from config.configuration import config
 import pandas as pd
 from datetime import datetime as dt
-import unicodedata
-import time
-import httpx
 
 def metas_sucursales():
     data = config.supabase.table(config.TAB_SECRETOS).select("*").execute().data
@@ -123,85 +117,3 @@ def ventas_sucursales():
         'Tona': df_tona['Ventas'].sum()
     }
     return ventas_df_dic, ventas_sum_dic
-
-'''
-def diccionario_categorias():
-    # Obtener los valores de las tablas
-    data = config.supabase.table(config.TAB_PRODUCTOS).select("productos, categoria").execute().data
-    # lo hacemos diccionario
-    data_dic = {d['productos']: d['categoria'] for d in data}
-    # Crear un nuevo diccionario para agrupar productos por categorías
-    productos_por_categoria = {}
-    # Agrupar productos por categorías
-    for producto, categoria in data_dic.items():
-        if categoria not in productos_por_categoria:
-            productos_por_categoria[categoria] = []
-        productos_por_categoria[categoria].append(producto)
-    return productos_por_categoria
-
-
-def quitar_acentos(serie):
-    return serie.apply(lambda x: unicodedata.normalize('NFKD', x).encode('ascii', errors='ignore').decode('utf-8'))
-
-def obtener_datos(tabla, columna_fecha, inicio, fin, retries=3, delay=2):
-    for intento in range(retries):
-        try:
-            data = config.supabase.table(tabla).select("*").gte(columna_fecha, inicio).lte(columna_fecha, fin).execute().data
-            return pd.DataFrame(data)
-        except (httpx.ReadError, Exception) as e:
-            print(f"[{tabla}] Error al obtener datos: {e}. Reintentando {intento + 1}/{retries}...")
-            time.sleep(delay)
-    print(f"[{tabla}] No se pudo obtener datos después de {retries} intentos.")
-    return pd.DataFrame()
-
-def procesar_dataframe(df, col_fecha, col_valor, nuevo_nombre_valor):
-    if df.empty:
-        return df
-    df['sucursal'] = quitar_acentos(df['sucursal'])
-    df = df[[col_fecha, 'sucursal', col_valor]].copy()
-    df.columns = ['Fecha', 'sucursal', nuevo_nombre_valor]
-    df['Fecha'] = pd.to_datetime(df['Fecha'])
-    return df.groupby(['Fecha', 'sucursal'], as_index=False)[nuevo_nombre_valor].sum()
-
-def ventas_sucursales():
-    list_tk = ['db05_tickets_agri', 'db05_tickets_neza', 'db05_tickets_zapo', 'db05_tickets_oaxt', 'db05_tickets_panti']
-    list_ab = ['db03_abonos_celebracion_agri', 'db03_abonos_celebracion_neza', 'db03_abonos_celebracion_zapo', 'db03_abonos_celebracion_oaxt', 'db03_abonos_celebracion_panti']
-    dia_hoy = dt.now().strftime("%Y-%m-%d")
-    inicio_mes = dt.now().strftime("%Y-%m-01")
-
-    dfs_ab, dfs_tk = [], []
-
-    for tab_ab, tab_tk in zip(list_ab, list_tk):
-        df_ab = obtener_datos(tab_ab, 'fecha_abono', inicio_mes, dia_hoy)
-        df_tk = obtener_datos(tab_tk, 'fecha', inicio_mes, dia_hoy)
-        if not df_ab.empty:
-            dfs_ab.append(df_ab)
-        if not df_tk.empty:
-            dfs_tk.append(df_tk)
-
-    df_abonos = procesar_dataframe(pd.concat(dfs_ab) if dfs_ab else pd.DataFrame(), 'fecha_abono', 'cantidad_abonada', 'total_abono')
-    df_tickets = procesar_dataframe(pd.concat(dfs_tk) if dfs_tk else pd.DataFrame(), 'fecha', 'costo_total', 'total_ticket')
-
-    # Asegurarse de que los DataFrames tengan las columnas necesarias si están vacíos
-    if df_abonos.empty:
-        df_abonos = pd.DataFrame(columns=['Fecha', 'sucursal', 'total_abono'])
-
-    if df_tickets.empty:
-        df_tickets = pd.DataFrame(columns=['Fecha', 'sucursal', 'total_ticket'])
-
-    df = pd.merge(df_abonos, df_tickets, on=['Fecha', 'sucursal'], how='outer').fillna(0)
-    df['Ventas'] = df['total_abono'] + df['total_ticket']
-    df = df[['Fecha', 'sucursal', 'Ventas']]
-
-    sucursales = {
-        'Agri': 'Agricola Oriental',
-        'Neza': 'Nezahualcoyotl',
-        'Zapo': 'Zapotitlan',
-        'Oaxte': 'Oaxtepec',
-        'Panti': 'Pantitlan'
-    }
-
-    ventas_df_dic = {k: df[df['sucursal'] == v] for k, v in sucursales.items()}
-    ventas_sum_dic = {k: v['Ventas'].sum() for k, v in ventas_df_dic.items()}
-
-    return ventas_df_dic, ventas_sum_dic'''

@@ -36,6 +36,7 @@ mdurl==0.1.2
 multidict==6.1.0
 narwhals==1.8.1
 numpy==2.1.1
+openpyxl==3.1.5
 packaging==24.1
 pandas==2.2.2
 pillow==10.4.0

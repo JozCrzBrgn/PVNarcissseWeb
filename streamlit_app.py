@@ -8,8 +8,6 @@ st.set_page_config(layout="wide")
 #? --- AUTH LOGIN ---#
 authenticator = load_authenticator()
 name, auth_status, username = authenticator.login()
-
-
 if auth_status:
     st.session_state["name"] = name
     st.session_state["auth_status"] = auth_status

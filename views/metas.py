@@ -1,31 +1,15 @@
-import streamlit as st
-import streamlit_authenticator as stauth
-
-from config.configuration import config, read_json_from_supabase
+import streamlit as st 
 from config.custom_widgets import meta, grafico_barras, grafico_velocimetro
 from config.db_values import metas_sucursales, ventas_sucursales
 
-#* USER AUTHENTICATION
-credenciales = read_json_from_supabase(config.BUCKET_GENERAL, config.CREDENCIALES_FILE)
-authenticator = stauth.Authenticate(
-    credenciales,
-    st.secrets["COOKIE_NAME"],
-    st.secrets["COOKIE_KEY"],
-    int(st.secrets["COOKIE_EXPIRY_DAYS"]),
-)
-name, authentication_status, username = authenticator.login()
 
-if authentication_status is False:
-    st.error('Username/password is incorrect')
-elif authentication_status is None:
-    st.warning('Please enter your username ands password')
-elif authentication_status:
-    col1, col2 = st.columns([4,1])
-    with col1:
-        st.success('Bienvenid@ {}'.format(name))
-    with col2:
-        authenticator.logout('Logout', 'main')
-    
+# Leer del estado de sesión
+name = st.session_state.get("name")
+auth_status = st.session_state.get("auth_status")
+username = st.session_state.get("username")
+
+if auth_status:
+
     st.title("Metas")
 
     if name=="Juan Tinajero" or name=="Sr. Silvia":

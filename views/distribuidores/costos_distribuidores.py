@@ -1,7 +1,10 @@
 import streamlit as st
-from config.auth import authenticate_user
 
-name, auth_status, username = authenticate_user()
+# Leer del estado de sesión
+name = st.session_state.get("name")
+auth_status = st.session_state.get("auth_status")
+username = st.session_state.get("username")
+
 
 if auth_status:
     # Continúa con tu app

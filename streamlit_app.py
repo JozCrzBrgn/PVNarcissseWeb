@@ -1,7 +1,33 @@
 import streamlit as st
+from config.auth import load_authenticator
 
 #? --- PAGE SETUP ---#
 st.set_page_config(layout="wide")
+
+
+#? --- AUTH LOGIN ---#
+authenticator = load_authenticator()
+name, auth_status, username = authenticator.login()
+
+
+if auth_status:
+    st.session_state["name"] = name
+    st.session_state["auth_status"] = auth_status
+    st.session_state["username"] = username
+    col1, col2 = st.columns([4,1])
+    with col1:
+        st.success('Bienvenid@ {}'.format(name))
+    with col2:
+        authenticator.logout('Logout', 'main')
+elif auth_status is False:
+    st.error("Usuario o contraseña incorrectos")
+    st.stop()
+elif auth_status is None:
+    st.warning("Por favor ingresa tus credenciales")
+    st.stop()
+
+
+
 
 inventarios_page = st.Page(
     page="views/inventario.py",
@@ -107,24 +133,20 @@ costos_distribuidores = st.Page(
 )
 
 
-#? --- NAVEGATION SETUP [WITH SECTIONS] ---#
-
+#? --- DYNAMIC NAVEGATION SETUP [WITH SECTIONS] ---#
 nav_dict = {
-    "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page, compras_sucursales_page],
-    "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
-    "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
-    "Alta de Productos": [agregar_producto],
-    "Métricas": [metas_page],
-    }
-
-from config.auth import authenticate_user
-
-name, auth_status, username = authenticate_user()
-
-# Solo si el usuario es admin, agrega la sección Distribuidores
-if username == "admin":  # o usa un campo de rol si lo tienes
-    nav_dict["Distribuidores"] = [costos_distribuidores]
-
+        "Información de sucursales": [inventarios_page, venats_page, ventas_filtros_page, compras_sucursales_page],
+        "Pasteles de Celebración": [pasteles_celebracion_calendar, pasteles_celebracion_page, pasteles_celebracion_por_entregar_page, pasteles_celebracion_prod_page, pasteles_celebracion_entregado_levantado_page],
+        "Inflalandia": [crear_pedido_inflalandia, crear_pedido_inflalandia_caro, editar_pedido_inflalandia, abonos_inflalandia, pdfs_inflalandia],
+        }
+# Si el usuario está autenticado y es admin, agrega secciones adicionales
+if st.session_state.get("auth_status") and st.session_state.get("username") == "admin":
+    nav_dict.update({
+        "Distribuidores": [costos_distribuidores],
+        "Alta de Productos": [agregar_producto],
+        "Métricas": [metas_page]
+    })
+# Mostrar navegación
 pg = st.navigation(nav_dict)
 
 #? --- SHARE ON ALL PAGES ---#

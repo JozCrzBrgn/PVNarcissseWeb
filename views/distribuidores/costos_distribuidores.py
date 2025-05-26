@@ -5,6 +5,7 @@ from openpyxl import load_workbook
 from io import BytesIO
 import unicodedata
 from config.configuration import config
+from datetime import datetime as dt
 
 # Leer del estado de sesión
 name = st.session_state.get("name")
@@ -26,7 +27,15 @@ tabla_pedidos_db = {
         "Iztapalapa":"db01_pedidos_iztapalapa",
         "Tonanitla":"db01_pedidos_tona",
         }
-
+tabla_pedidos_celebracion_db = {
+        "Agrícola Oriental":"db02_pedidos_celebracion_agri", 
+        "Nezahualcóyotl":"db02_pedidos_celebracion_neza", 
+        "Zapotitlán":"db02_pedidos_celebracion_zapo", 
+        "Oaxtepec":"db02_pedidos_celebracion_oaxt", 
+        "Pantitlán":"db02_pedidos_celebracion_panti",
+        "Iztapalapa":"db02_pedidos_celebracion_iztapalapa",
+        "Tonanitla":"db02_pedidos_celebracion_tona",
+        }
 
 if auth_status:
     st.title("Costos Distribuidor")
@@ -39,9 +48,13 @@ if auth_status:
     if sucursal!=None:
         col1, col2 = st.columns(2)
         with col1:
-            fecha_ini = st.date_input("Selecciona una fecha inicial", key='fi')
+            hoy = dt.today()
+            inicio_mes = hoy.replace(day=1)
+            fecha_ini = st.date_input("Selecciona una fecha inicial", value=inicio_mes, key='fi')
         with col2:
             fecha_fin = st.date_input("Selecciona una fecha final", key='ff')
+
+
         # Obtener los datos de los productos
         data_prod = config.supabase.table(config.LISTA_PRODUCTOS).select("productos, categoria, precio_ingredientes, precio_compra, precio_venta").execute().data
         # Crear un dataframe
@@ -51,7 +64,7 @@ if auth_status:
         # Crear un dataframe
         df = pd.DataFrame(data)
         if df.empty:
-            st.warning(f"La sucursal de {sucursal} no tiene pedidos en el rango de {fecha_ini} a {fecha_fin}.")
+            st.warning(f"La sucursal de {sucursal} no tiene pedidos de linea en el rango de {fecha_ini} a {fecha_fin}.")
         else:
             #* PIVOTEAMOS POR: clave, producto, PS00..00*n
             pivot_df = df.pivot_table(
@@ -86,26 +99,59 @@ if auth_status:
             df_merge["total_ingredientes"] = df_merge["precio_ingredientes"] * df_merge["total_piezas"]
             df_merge["total_compra"] = df_merge["precio_compra"] * df_merge["total_piezas"]
             df_merge["total_venta"] = df_merge["precio_venta"] * df_merge["total_piezas"]
-            
+
+            #* PASTELES CELEBRACION
+            data_celeb = config.supabase.table(tabla_pedidos_celebracion_db[sucursal]).select("clave, descuento, flete, extras").gte("fecha_entrega", fecha_ini).lte("fecha_entrega", fecha_fin).execute().data
+            # Crear un dataframe
+            df_celeb = pd.DataFrame(data_celeb)
+            if df_celeb.empty:
+                df_linea_celeb = df_merge.copy()
+            else:
+                # Obtenemos la venta total
+                df_celeb['total_venta'] = df_celeb['descuento'] + df_celeb['flete'] + df_celeb['extras']
+                # Obtenemos 70% y 30%
+                df_celeb['venta_70'] = df_celeb['total_venta'] * 0.7
+                df_celeb['venta_30'] = df_celeb['total_venta'] * 0.3
+                # Eliminamos columnas que no nos sirven
+                df_celeb.drop(columns=["descuento", "flete", "extras"], inplace=True)
+                # Renombramos columna 'clave' a 'producto'
+                df_celeb.rename(columns={'clave': 'producto'}, inplace=True)
+                # Agregamos la columna categoria y que todos los renglones digan Celebracion
+                df_celeb['categoria'] = 'Celebracion'
+                # Crear columnas faltantes en df_celeb con 0 por defecto
+                columnas_faltantes = [col for col in df_merge.columns if col not in df_celeb.columns]
+                for col in columnas_faltantes:
+                    df_celeb[col] = 0
+                # Reordenar columnas de df_celeb igual que df_merge
+                df_celeb = df_celeb[df_merge.columns]
+                # Concatenar los dos DataFrames
+                df_linea_celeb = pd.concat([df_merge, df_celeb], ignore_index=True)
+
             #* ANALISIS DE DATOS
-            categorias = df_merge['categoria'].unique()
+            categorias = df_linea_celeb['categoria'].unique()
             dfs_apilados = []
             for categoria in categorias:
-                df_cat = df_merge[df_merge['categoria'] == categoria]
-                # Calcular la suma de todas las columnas numéricas (omitimos la primera columna)
-                totales = df_cat.iloc[:, 1:].sum()
+                df_cat = df_linea_celeb[df_linea_celeb['categoria'] == categoria].copy()
+                # Calcular la suma de columnas numéricas (excluyendo 'producto' y 'categoria')
+                columnas_numericas = df_cat.select_dtypes(include='number').columns
+                totales = df_cat[columnas_numericas].sum()
                 # Crear fila total
-                fila_total = pd.DataFrame([["TOTAL"] + list(totales)], columns=df_cat.columns)
-                # Agregar columna de categoría si quieres que aparezca también en la fila TOTAL
+                fila_total = pd.DataFrame(columns=df_cat.columns)
+                fila_total.loc[0, 'producto'] = "TOTAL"
+                for col in columnas_numericas:
+                    fila_total.loc[0, col] = totales[col]
                 fila_total['categoria'] = categoria
-                df_cat = df_merge[df_merge['categoria'] == categoria].copy()
-                df_cat.loc[:, 'categoria'] = categoria
                 # Concatenar con fila de totales
                 df_con_totales = pd.concat([df_cat, fila_total], ignore_index=True)
-                # Agregar título visual si quieres separarlos mejor
+                print(categoria)
+                # Agregar título visual
                 fila_titulo = pd.DataFrame([[f'=== {categoria.upper()} ==='] + [None]*(df_con_totales.shape[1]-1)], columns=df_con_totales.columns)
-                # Agregar al acumulador
-                dfs_apilados.extend([fila_titulo, df_con_totales, pd.DataFrame([[""]*df_con_totales.shape[1]], columns=df_con_totales.columns)])  # fila vacía para separación
+                # Agregar todo al acumulador
+                dfs_apilados.extend([
+                    fila_titulo,
+                    df_con_totales,
+                    pd.DataFrame([[""] * df_con_totales.shape[1]], columns=df_con_totales.columns)  # fila vacía
+                ])
             # Concatenar todo
             df_final = pd.concat(dfs_apilados, ignore_index=True)
 
